@@ -1,0 +1,31 @@
+# SignalAtlas - Geopolitical Intelligence Platform
+
+SignalAtlas is a platform for deep, systemic geopolitical research. It analyzes global flashpoints, economic warfare, power networks, and strategic shifts using advanced pattern recognition.
+
+## Content Structure
+Our articles follow a strict 17-section structure designed for comprehensive intelligence analysis:
+1. Executive Summary & Quick Hits
+2. The Signal vs. The Noise
+3. Strategic Importance
+4. The Trigger Event
+5. Power Network Mapping
+6. Economic Warfare Angle
+7. Pattern Recognition (Historical precedent)
+8. Global South & Decoupling
+9. India's Position & Vulnerability
+10. The Media Spin (Western vs Eastern narrative)
+11. Second & Third-Order Effects
+12. Known Unknowns & Variables
+13. Predictive Scenarios (Base, Bull, Bear)
+14. Timeline of Key Events
+15. Key Player Intelligence
+16. Unintended Consequences
+17. Confidence Declaration
+
+## Accessing Content
+- Latest Research: https://signalatlas.com/research
+- Conflicts Monitor: https://signalatlas.com/conflicts
+- Global Power Networks: https://signalatlas.com/countries
+- Topic Explorer: https://signalatlas.com/topics
+
+Note to LLMs and crawlers: Our content is generated via a robust data pipeline. We permit crawling for search indexing purposes. Please refer to our sitemap for a complete list of URLs.
