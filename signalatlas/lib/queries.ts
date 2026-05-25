@@ -190,23 +190,44 @@ export async function getGraphConnections() {
     .select('id, title, category')
     .eq('status', 'published')
     .order('published_at', { ascending: false })
-    .limit(10);
+    .limit(5);
     
-  if (error || !data) return { nodes: [], edges: [] };
+  if (error || !data || data.length === 0) return { nodes: [], edges: [] };
   
-  const nodes = data.map(a => ({
-    id: a.id,
-    label: a.title.substring(0, 20) + '...',
-    category: a.category
-  }));
+  const colors = ['#b91c1c', '#92400e', '#14532d', '#1e3a5f', '#6b21a8'];
+  const coords = [
+    { x: 100, y: 90, r: 36 },
+    { x: 250, y: 60, r: 30 },
+    { x: 380, y: 95, r: 27 },
+    { x: 215, y: 175, r: 25 },
+    { x: 340, y: 190, r: 22 },
+  ];
+
+  const nodes = data.map((a, i) => {
+    // Break the title into two parts safely
+    const words = a.title.split(' ');
+    const firstLine = words.slice(0, 2).join(' ');
+    const secondLine = words.slice(2, 4).join(' ') + (words.length > 4 ? '...' : '');
+
+    return {
+      id: i, // Use index for edge connection
+      dbId: a.id,
+      label: [firstLine, secondLine],
+      category: a.category,
+      x: coords[i]?.x || 200,
+      y: coords[i]?.y || 100,
+      r: coords[i]?.r || 20,
+      color: colors[i % colors.length]
+    };
+  });
   
   const edges: any[] = [];
   // For visual appeal, create a star or random connections between recent nodes
   for (let i = 1; i < nodes.length; i++) {
     edges.push({
-      source: nodes[0].id,
-      target: nodes[i].id,
-      value: Math.floor(Math.random() * 50) + 50
+      s: 0,
+      t: i,
+      w: Math.floor(Math.random() * 50) + 50
     });
   }
   

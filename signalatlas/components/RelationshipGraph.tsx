@@ -73,7 +73,9 @@ export default function RelationshipGraph({ nodes = DEFAULT_NODES, edges = DEFAU
               </g>
             );
           })}
-          {nodes.map((n) => (
+          {nodes.map((n) => {
+            const labelLines: string[] = Array.isArray(n.label) ? n.label : [String(n.label)];
+            return (
             <g
               key={n.id}
               style={{ cursor: 'pointer' }}
@@ -88,11 +90,11 @@ export default function RelationshipGraph({ nodes = DEFAULT_NODES, edges = DEFAU
                 strokeWidth={hov === n.id ? 2 : 1.5}
                 style={{ transition: 'all 0.18s' }}
               />
-              {n.label.map((w, wi) => (
+              {labelLines.map((w, wi) => (
                 <text
                   key={wi}
                   x={n.x}
-                  y={n.y + (n.label.length === 1 ? 4 : wi === 0 ? -3 : 9)}
+                  y={n.y + (labelLines.length === 1 ? 4 : wi === 0 ? -3 : 9)}
                   textAnchor="middle"
                   fontSize={hov === n.id ? 9.5 : 8.5}
                   fill={hov === n.id ? '#fff' : n.color}
@@ -103,7 +105,8 @@ export default function RelationshipGraph({ nodes = DEFAULT_NODES, edges = DEFAU
                 </text>
               ))}
             </g>
-          ))}
+            );
+          })}
         </svg>
         <div style={{ fontSize: 10, color: 'var(--ink4)', paddingTop: 4, textAlign: 'center' }}>
           Hover any node to reveal connection strength

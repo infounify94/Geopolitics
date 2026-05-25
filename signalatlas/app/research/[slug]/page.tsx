@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { marked } from 'marked';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import FAQSection from '@/components/FAQSection';
@@ -10,9 +11,9 @@ import { getArticleBySlug, getAllPublishedSlugs, getRelatedArticles } from '@/li
 import { CATEGORY_COLORS } from '@/lib/types';
 import type { Article } from '@/lib/types';
 
-export const runtime = 'edge';
+// ISR: revalidate every hour — no redeploy needed when new articles publish
 export const dynamicParams = true;
-export const revalidate = 3600; // 1 hour
+export const revalidate = 3600;
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -56,6 +57,11 @@ export default async function ArticlePage({ params }: Props) {
   const related = await getRelatedArticles(article.id, 3);
   const cat = CATEGORY_COLORS[article.category] ?? CATEGORY_COLORS['GENERAL'];
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://signalatlas.com';
+
+  // Convert markdown content to HTML
+  const contentHtml = article.content
+    ? (marked.parse(article.content) as string)
+    : '';
 
   // JSON-LD Article Schema
   const articleSchema = {
@@ -175,10 +181,10 @@ export default async function ArticlePage({ params }: Props) {
         <hr style={{ border: 'none', borderTop: '1px solid var(--border)', marginBottom: 28 }} />
 
         {/* Article Body */}
-        {article.content && (
+        {contentHtml && (
           <div
             className="article-body"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: contentHtml }}
           />
         )}
 
