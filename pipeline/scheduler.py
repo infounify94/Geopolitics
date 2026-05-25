@@ -82,8 +82,7 @@ def run_pipeline() -> None:
             print("  - Generation failed, skipping\n")
             continue
 
-        # Force the score from the scorer into the generated article
-        article['topic_score'] = score
+        # (Removed topic_score injection as it is not in the DB schema)
 
         # Publish
         article_id = publish_article(article)
