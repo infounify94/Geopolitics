@@ -15,39 +15,9 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from generator import generate_article
 from publisher import publish_article
+from scraper import fetch_gnews_topics
 
-# Topics queue - add more here as you think of them
-TOPIC_QUEUE = [
-    # India Lens
-    "India's Strategic Silence on Dollar-Yuan Rivalry: Optionality or Fence-Sitting?",
-    "How Red Sea Disruptions Are Costing Indian Importers $340 Per Container",
-    "India's Gold Reserve Buildup: Three Consecutive Months - What RBI Isn't Saying",
-    "Foreign Funding of Anti-India Protests: A Documented Pattern Since 2019",
-    "India-China Border Tensions and the Supply Chain Reshuffling Nobody Talks About",
-
-    # Economic Warfare
-    "IMF Loan Trap: How 40 Nations Lost Policy Sovereignty in 15 Years",
-    "SWIFT Bypass: How Russia Built an Alternative Payment Network in 18 Months",
-    "Dollar Weaponization: When Sanctions Became America's Foreign Policy Default",
-    "Who Profits from Sri Lanka's Debt Crisis: A Follow-the-Money Analysis",
-    "The Petrodollar Compact: Why Its Fracture Matters More Than Oil Prices",
-
-    # Power Networks
-    "The Political Protest Blueprint: Same NGO Networks, 14 Countries, 25 Years",
-    "Color Revolution Playbook: From Tbilisi 2003 to Today",
-    "Fact-Checker Funding Trails: Who Pays the Arbiters of Truth?",
-    "Media Ownership and Narrative Control: The Western Information Ecosystem",
-    "How NGOs Became Tools of Geopolitical Influence",
-
-    # Conflicts
-    "Sudan's Gold War: The Hidden Resource Motive Behind the Civil Conflict",
-    "Gaza Conflict: Arms Trade Winners and the $847B Weapons Economy",
-    "Myanmar Coup: Who Benefits from Persistent Instability?",
-    "Yemen: The World's Forgotten Proxy War and Its Sponsors",
-    "Sahel Coups: Why West Africa Is Rejecting France and Turning East",
-]
-
-ARTICLES_PER_RUN = int(os.environ.get("ARTICLES_PER_RUN", "1"))
+ARTICLES_PER_RUN = int(os.environ.get("ARTICLES_PER_RUN", "3"))
 DELAY_BETWEEN = int(os.environ.get("DELAY_BETWEEN_SECS", "30"))
 
 def load_published_topics() -> set:
@@ -70,22 +40,34 @@ def run_pipeline() -> None:
     print(f"SignalAtlas Pipeline - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"{'='*60}")
 
+    print("Fetching latest geopolitical news from GNews...")
+    news_items = fetch_gnews_topics()
+    
+    if not news_items:
+        print("No news fetched. Exiting.")
+        return
+
     published = load_published_topics()
-    pending = [t for t in TOPIC_QUEUE if t not in published]
+    
+    # Filter out already published news (using title as the unique topic identifier)
+    pending = [item for item in news_items if item['title'] not in published]
 
     if not pending:
-        print("All topics published. Add more to TOPIC_QUEUE in scheduler.py")
+        print("All current news topics have already been published.")
         return
 
     targets = pending[:ARTICLES_PER_RUN]
     print(f"Generating {len(targets)} article(s)...\n")
 
     success = 0
-    for i, topic in enumerate(targets):
+    for i, item in enumerate(targets):
+        topic = item['title']
+        context = f"Source: {item['source']}\nURL: {item['url']}\nDate: {item['publishedAt']}\nSummary: {item['description']}"
+        
         print(f"[{i+1}/{len(targets)}] {topic[:70]}")
 
-        # Generate
-        article = generate_article(topic)
+        # Generate using context
+        article = generate_article(topic, context=context)
         if not article:
             print("  - Generation failed, skipping\n")
             continue
