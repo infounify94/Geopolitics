@@ -15,7 +15,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from generator import generate_article
 from publisher import publish_article
-from scraper import fetch_gnews_topics
+from scraper import fetch_all_topics
+from scorer import score_topics
 
 ARTICLES_PER_RUN = int(os.environ.get("ARTICLES_PER_RUN", "3"))
 DELAY_BETWEEN = int(os.environ.get("DELAY_BETWEEN_SECS", "30"))
@@ -40,37 +41,49 @@ def run_pipeline() -> None:
     print(f"SignalAtlas Pipeline - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"{'='*60}")
 
-    print("Fetching latest geopolitical news from GNews...")
-    news_items = fetch_gnews_topics()
+    print("Step 1: Fetching intelligence from 4-Layer Discovery Pipeline...")
+    raw_news_items = fetch_all_topics()
     
-    if not news_items:
+    if not raw_news_items:
         print("No news fetched. Exiting.")
         return
 
     published = load_published_topics()
     
     # Filter out already published news (using title as the unique topic identifier)
-    pending = [item for item in news_items if item['title'] not in published]
+    pending = [item for item in raw_news_items if item['title'] not in published]
 
     if not pending:
         print("All current news topics have already been published.")
         return
 
-    targets = pending[:ARTICLES_PER_RUN]
-    print(f"Generating {len(targets)} article(s)...\n")
+    print("Step 2: AI Scoring System evaluating topics...")
+    scored_items = score_topics(pending)
+
+    if not scored_items:
+        print("No topics passed the minimum score threshold (>= 55).")
+        return
+
+    # Take the top N highest scored articles
+    targets = scored_items[:ARTICLES_PER_RUN]
+    print(f"\nStep 3: Generating {len(targets)} high-value article(s)...\n")
 
     success = 0
     for i, item in enumerate(targets):
         topic = item['title']
-        context = f"Source: {item['source']}\nURL: {item['url']}\nDate: {item['publishedAt']}\nSummary: {item['description']}"
+        score = item.get('topic_score', 0)
+        context = f"Source: {item['source']}\nURL: {item['url']}\nDate: {item['publishedAt']}\nSummary: {item['description']}\nScore: {score}"
         
-        print(f"[{i+1}/{len(targets)}] {topic[:70]}")
+        print(f"[{i+1}/{len(targets)}] (Score {score}/100) {topic[:60]}...")
 
         # Generate using context
         article = generate_article(topic, context=context)
         if not article:
             print("  - Generation failed, skipping\n")
             continue
+
+        # Force the score from the scorer into the generated article
+        article['topic_score'] = score
 
         # Publish
         article_id = publish_article(article)

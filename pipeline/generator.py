@@ -11,7 +11,7 @@ from openai import OpenAI
 
 # Groq API uses OpenAI-compatible SDK (gsk_ prefix = groq.com, not xAI)
 client = OpenAI(
-    api_key=os.environ.get("GROQ_API_KEY", ""),
+    api_key=os.environ.get("GROQ_API_KEY") or "dummy_key",
     base_url="https://api.groq.com/openai/v1",
 )
 
