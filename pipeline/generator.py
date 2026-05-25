@@ -55,34 +55,33 @@ CRITICAL WRITING INSTRUCTIONS:
 - Weave the 17-section structure naturally into human-readable, professional prose.
 - Use fluid transitions. Think "Foreign Affairs meets Bloomberg Intelligence".
 - Avoid repetitive phrases. Write like a seasoned geopolitical analyst.
-- Format the actual article text using standard markdown and store it in the `body_mdx` field.
+- Format the actual article text using standard markdown and store it in the `content` field.
 
 JSON SCHEMA EXPECTED:
 {{
   "title": "Article headline",
   "slug": "url-friendly-slug-max-80-chars",
-  "meta_desc": "155 char SEO description",
-  "body_mdx": "The full markdown article text goes here, naturally incorporating all required angles WITHOUT robotic headers.",
-  "quick_summary": ["bullet 1", "bullet 2", "bullet 3"],
+  "meta_description": "155 char SEO description",
+  "content": "The full markdown article text goes here, naturally incorporating all required angles WITHOUT robotic headers.",
+  "summary_bullets": ["bullet 1", "bullet 2", "bullet 3"],
   "category": "One of: POWER NETWORKS, ECONOMIC WARFARE, INDIA LENS, CONFLICTS, MEDIA BIAS, SANCTIONS, ARMS TRADE, GLOBAL SOUTH",
-  "confidence": "High",
-  "evidence": "Strong",
+  "confidence_level": "High",
+  "evidence_level": "Strong",
   "impact_score": 8.5,
-  "topic_score": 85,
-  "country_tags": ["Country1", "Country2"],
-  "topic_tags": ["Topic1", "Topic2"],
+  "pattern_score": 8,
+  "evergreen_score": 7,
+  "countries": ["Country1", "Country2"],
+  "topics": ["Topic1", "Topic2"],
   "event_type": "war | coup | sanctions | election | economic | protest | other",
-  "pattern_name": "Name from Pattern Taxonomy",
   "sources": [
     {{"name": "Reuters", "url": "...", "used_for": "News Agency"}}
   ],
   "faq": [
     {{"q": "What is...?", "a": "..."}}
   ],
-  "chart_data": {{
-    "type": "radar",
-    "description": "Media bias comparison"
-  }},
+  "chart_suggestions": [
+    {{"type": "radar", "description": "Media bias comparison"}}
+  ],
   "read_time_mins": 14
 }}
 """
@@ -125,22 +124,24 @@ Remember to output ONLY valid JSON.
         article = {
             "slug":              metadata.get("slug") or slugify(metadata.get("title", topic)),
             "title":             metadata.get("title", topic),
-            "meta_desc":         metadata.get("meta_desc", "")[:155],
-            "body_mdx":          metadata.get("body_mdx", "No content generated."),
-            "quick_summary":     metadata.get("quick_summary", [])[:3],
+            "meta_description":  metadata.get("meta_description", "")[:155],
+            "content":           metadata.get("content", "No content generated."),
+            "summary_bullets":   metadata.get("summary_bullets", [])[:3],
             "category":          metadata.get("category", "GENERAL"),
-            "confidence":        metadata.get("confidence", "Medium"),
-            "evidence":          metadata.get("evidence", "Moderate"),
+            "confidence_level":  metadata.get("confidence_level", "Medium"),
+            "evidence_level":    metadata.get("evidence_level", "Moderate"),
             "impact_score":      float(metadata.get("impact_score", 7.0)),
-            "topic_score":       int(metadata.get("topic_score", 65)),
-            "country_tags":      metadata.get("country_tags", []),
-            "topic_tags":        metadata.get("topic_tags", []),
+            "pattern_score":     int(metadata.get("pattern_score", 5)),
+            "evergreen_score":   int(metadata.get("evergreen_score", 5)),
+            "countries":         metadata.get("countries", []),
+            "topics":            metadata.get("topics", []),
             "event_type":        metadata.get("event_type", "other"),
-            "pattern_name":      metadata.get("pattern_name", ""),
             "sources":           metadata.get("sources", []),
+            "source_count":      len(metadata.get("sources", [])),
             "faq":               metadata.get("faq", []),
-            "chart_data":        metadata.get("chart_data", {}),
-            "read_time_mins":    metadata.get("read_time_mins") or estimate_read_time(metadata.get("body_mdx", "")),
+            "chart_suggestions": metadata.get("chart_suggestions", []),
+            "read_time_mins":    metadata.get("read_time_mins") or estimate_read_time(metadata.get("content", "")),
+            "word_count":        len(metadata.get("content", "").split()),
             "status":            "published",
             "published_at":      datetime.now(timezone.utc).isoformat(),
         }
@@ -156,21 +157,21 @@ def _fallback_metadata(topic: str, raw: str) -> dict:
     return {
         "title": topic,
         "slug": slugify(topic),
-        "meta_desc": topic[:155],
-        "body_mdx": raw,
-        "quick_summary": [],
+        "meta_description": topic[:155],
+        "content": raw,
+        "summary_bullets": [],
         "category": "GENERAL",
-        "confidence": "Medium",
-        "evidence": "Moderate",
+        "confidence_level": "Medium",
+        "evidence_level": "Moderate",
         "impact_score": 7.0,
-        "topic_score": 50,
-        "country_tags": [],
-        "topic_tags": [],
+        "pattern_score": 5,
+        "evergreen_score": 5,
+        "countries": [],
+        "topics": [],
         "event_type": "other",
-        "pattern_name": "",
         "sources": [],
         "faq": [],
-        "chart_data": {},
+        "chart_suggestions": [],
         "read_time_mins": estimate_read_time(raw),
     }
 
