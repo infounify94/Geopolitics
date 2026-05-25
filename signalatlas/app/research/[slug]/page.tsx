@@ -11,9 +11,10 @@ import { getArticleBySlug, getAllPublishedSlugs, getRelatedArticles } from '@/li
 import { CATEGORY_COLORS } from '@/lib/types';
 import type { Article } from '@/lib/types';
 
-// ISR: revalidate every hour — no redeploy needed when new articles publish
+// Edge runtime required by Cloudflare Pages (next-on-pages adapter)
+// Fresh data is fetched from Supabase on every request — no ISR needed
+export const runtime = 'edge';
 export const dynamicParams = true;
-export const revalidate = 3600;
 
 interface Props {
   params: Promise<{ slug: string }>;
