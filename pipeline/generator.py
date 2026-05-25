@@ -47,44 +47,55 @@ def generate_article(topic: str, context: str = "") -> dict | None:
 
 ## OUTPUT FORMAT REQUIREMENTS
 
-You MUST output your ENTIRE response as a SINGLE valid JSON object matching the Supabase `articles` table schema. 
+You MUST output your ENTIRE response as a SINGLE valid JSON object matching the Supabase `articles` table schema.
 Do NOT output markdown text outside of the JSON block.
 
 CRITICAL WRITING INSTRUCTIONS:
+- Write a LONG, deeply researched article. Minimum 800 words of actual article content.
 - Do NOT use robotic step-by-step headers like "Angle 1" or "Section 4: What Happened".
-- Weave the 17-section structure naturally into human-readable, professional prose.
-- Use fluid transitions. Think "Foreign Affairs meets Bloomberg Intelligence".
-- Avoid repetitive phrases. Write like a seasoned geopolitical analyst.
-- Format the actual article text using standard markdown and store it in the `content` field.
+- You have 17 analytical angles (from the master prompt) — weave them NATURALLY into flowing prose.
+- Use fluid transitions. Think "Foreign Affairs magazine meets Bloomberg Intelligence brief".
+- Vary your structure by story type: a coup article reads differently from a sanctions article.
+- Start strong: the first paragraph must hook the reader with the core finding.
+- Use specific numbers, named actors, documented events — not vague generalities.
+- Use subheadings that reveal the finding, not just label the section.
+  BAD: "The Economic Impact" → GOOD: "How a $40B Trade Route Died Quietly"
+- Bold the single most important finding per section.
+- Avoid repetitive phrases. Avoid weak hedges like "some say" or "it is reported".
+- Format the actual article text using standard markdown in the `content` field.
 
 JSON SCHEMA EXPECTED:
 {{
-  "title": "Article headline",
+  "title": "Article headline — state the finding, not just the event",
   "slug": "url-friendly-slug-max-80-chars",
-  "meta_description": "155 char SEO description",
-  "content": "The full markdown article text goes here, naturally incorporating all required angles WITHOUT robotic headers.",
-  "summary_bullets": ["bullet 1", "bullet 2", "bullet 3"],
+  "meta_description": "155 char SEO description including India angle if relevant",
+  "content": "The full markdown article — minimum 800 words — flowing prose with section headers, bold findings, timeline if relevant, India angle, who-benefits section, and 3 future scenarios. NO robotic numbering.",
+  "summary_bullets": ["Standalone finding 1", "Standalone finding 2", "Standalone finding 3", "Standalone finding 4"],
   "category": "One of: POWER NETWORKS, ECONOMIC WARFARE, INDIA LENS, CONFLICTS, MEDIA BIAS, SANCTIONS, ARMS TRADE, GLOBAL SOUTH",
-  "confidence_level": "High",
-  "evidence_level": "Strong",
+  "confidence_level": "High | Medium | Low",
+  "evidence_level": "Strong | Moderate | Limited",
   "impact_score": 8.5,
   "pattern_score": 8,
   "evergreen_score": 7,
   "countries": ["Country1", "Country2"],
   "topics": ["Topic1", "Topic2"],
-  "event_type": "war | coup | sanctions | election | economic | protest | other",
+  "event_type": "war | coup | sanctions | election | economic | protest | diplomatic | other",
   "sources": [
-    {{"name": "Reuters", "url": "...", "used_for": "News Agency"}}
+    {{"name": "Reuters", "url": "https://...", "used_for": "Primary reporting"}}
   ],
   "faq": [
-    {{"q": "What is...?", "a": "..."}}
+    {{"question": "Why is this happening now?", "answer": "2-3 sentence direct answer."}},
+    {{"question": "How does this affect India?", "answer": "2-3 sentence direct answer."}},
+    {{"question": "Who benefits from this?", "answer": "2-3 sentence direct answer."}},
+    {{"question": "What happens next?", "answer": "2-3 sentence direct answer."}}
   ],
   "chart_suggestions": [
-    {{"type": "radar", "description": "Media bias comparison"}}
+    {{"type": "bar", "description": "Defence spending comparison of involved nations 2020-2026"}}
   ],
-  "read_time_mins": 14
+  "read_time_mins": 10
 }}
 """
+
 
     user_message = f"""Write a full research article about the following topic:
 
@@ -106,8 +117,8 @@ Remember to output ONLY valid JSON.
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message},
             ],
-            max_tokens=6000,
-            temperature=0.6,
+            max_tokens=8000,
+            temperature=0.65,
             response_format={"type": "json_object"}
         )
 

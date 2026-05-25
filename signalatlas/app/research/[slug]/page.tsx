@@ -167,10 +167,10 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         )}
 
-        {/* Quick Summary — Google AI Overview bait */}
-        {article.summary_bullets?.length > 0 && (
+        {/* Signal Brief — only show when AI provides rich bullets */}
+        {article.summary_bullets?.length >= 3 && (
           <div className="quick-summary" style={{ marginBottom: 28 }}>
-            <div className="quick-summary-label">KEY FINDINGS — 30 SECOND BRIEF</div>
+            <div className="quick-summary-label">⚡ SIGNAL BRIEF · KEY FINDINGS</div>
             <ul>
               {article.summary_bullets.map((b, i) => <li key={i}>{b}</li>)}
             </ul>
