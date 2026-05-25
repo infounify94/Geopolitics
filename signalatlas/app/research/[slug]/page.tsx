@@ -40,10 +40,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export async function generateStaticParams() {
-  const slugs = await getAllPublishedSlugs();
-  return slugs.map(slug => ({ slug }));
-}
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return '';
