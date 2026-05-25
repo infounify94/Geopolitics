@@ -6,7 +6,7 @@ import type { Country } from '@/lib/types';
 
 interface Props { countries: Country[]; }
 
-const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
+const geoUrl = "/features.json";
 
 const ALERT_CLASS: Record<string, string> = {
   CRITICAL: 'var(--red)',
@@ -35,11 +35,11 @@ const COORDS: Record<string, [number, number]> = {
 };
 
 const FALLBACK: Country[] = [
-  { id: '1', name: 'United States', flag_emoji: 'US', alert_level: 'HIGH',     status_line: 'Trade wars + election cycle active', article_count: 0 },
-  { id: '2', name: 'China',         flag_emoji: 'CN', alert_level: 'HIGH',     status_line: 'Taiwan + BRI debt diplomacy',        article_count: 0 },
-  { id: '3', name: 'Russia',        flag_emoji: 'RU', alert_level: 'CRITICAL', status_line: 'Ukraine war + 267 active sanctions', article_count: 0 },
-  { id: '4', name: 'India',         flag_emoji: 'IN', alert_level: 'WATCH',    status_line: 'Strategic realignment underway',     article_count: 0 },
-  { id: '5', name: 'Pakistan',      flag_emoji: 'PK', alert_level: 'HIGH',     status_line: 'IMF loan #23 + economic crisis',     article_count: 0 },
+  { id: '1', name: 'United States', flag_emoji: '🇺🇸', alert_level: 'HIGH',     status_line: 'Trade wars + election cycle active', article_count: 0 },
+  { id: '2', name: 'China',         flag_emoji: '🇨🇳', alert_level: 'HIGH',     status_line: 'Taiwan + BRI debt diplomacy',        article_count: 0 },
+  { id: '3', name: 'Russia',        flag_emoji: '🇷🇺', alert_level: 'CRITICAL', status_line: 'Ukraine war + 267 active sanctions', article_count: 0 },
+  { id: '4', name: 'India',         flag_emoji: '🇮🇳', alert_level: 'WATCH',    status_line: 'Strategic realignment underway',     article_count: 0 },
+  { id: '5', name: 'Pakistan',      flag_emoji: '🇵🇰', alert_level: 'HIGH',     status_line: 'IMF loan #23 + economic crisis',     article_count: 0 },
 ];
 
 export default function CountryWatch({ countries }: Props) {
