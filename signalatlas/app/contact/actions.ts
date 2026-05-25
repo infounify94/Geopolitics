@@ -12,7 +12,7 @@ export async function submitContact(formData: FormData) {
     return { error: 'All fields are required.' };
   }
 
-  const { supabase } = createServerClient();
+  const supabase = createServerClient();
   
   const { error } = await supabase
     .from('contact_messages')

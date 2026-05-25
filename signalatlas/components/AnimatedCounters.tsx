@@ -38,13 +38,13 @@ const Counter = ({ target, label, color, prefix = "", suffix = "" }: { target: n
   );
 };
 
-export default function AnimatedCounters() {
+export default function AnimatedCounters({ stats }: { stats?: { articles: number, countries: number, patterns: number, accuracy: number } }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16, marginBottom: 40 }}>
-      <Counter target={1247} label="Research Articles" color="var(--blue)" />
-      <Counter target={87} label="Countries Tracked" color="var(--teal)" />
-      <Counter target={52} label="Patterns Found" color="var(--purple)" />
-      <Counter target={96} label="Prediction Accuracy" color="var(--amber)" suffix="%" />
+      <Counter target={stats?.articles ?? 1247} label="Research Articles" color="var(--blue)" />
+      <Counter target={stats?.countries ?? 87} label="Countries Tracked" color="var(--teal)" />
+      <Counter target={stats?.patterns ?? 52} label="Patterns Found" color="var(--purple)" />
+      <Counter target={stats?.accuracy ?? 96} label="Prediction Accuracy" color="var(--amber)" suffix="%" />
     </div>
   );
 }

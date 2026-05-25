@@ -56,7 +56,7 @@ export async function getRelatedArticles(
     .order('connection_strength', { ascending: false })
     .limit(limit);
   if (error) { console.error('getRelatedArticles:', error); return []; }
-  return data?.map((d: { articles: Article }) => d.articles).filter(Boolean) ?? [];
+  return (data as any)?.map((d: any) => d.articles).filter(Boolean) ?? [];
 }
 
 export async function searchArticles(query: string, limit = 10): Promise<Article[]> {
