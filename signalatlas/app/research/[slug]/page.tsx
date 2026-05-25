@@ -10,6 +10,7 @@ import { getArticleBySlug, getAllPublishedSlugs, getRelatedArticles } from '@/li
 import { CATEGORY_COLORS } from '@/lib/types';
 import type { Article } from '@/lib/types';
 
+export const runtime = 'edge';
 export const dynamicParams = true;
 export const revalidate = 3600; // 1 hour
 
