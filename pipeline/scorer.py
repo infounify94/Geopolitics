@@ -61,7 +61,7 @@ Respond ONLY with a JSON object in this exact format:
 
         try:
             response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
+                model="llama-3.1-8b-instant",
                 messages=[
                     {"role": "system", "content": "You are a senior geopolitical analyst scoring research topics. Respond ONLY in strict JSON format."},
                     {"role": "user", "content": prompt},
