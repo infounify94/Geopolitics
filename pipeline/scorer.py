@@ -61,7 +61,7 @@ Respond ONLY with a JSON object in this exact format:
 
         try:
             response = client.chat.completions.create(
-                model="llama-3.1-8b-instant",
+                model="llama-3.3-70b-versatile",
                 messages=[
                     {"role": "system", "content": "You are a senior geopolitical analyst scoring research topics. Respond ONLY in strict JSON format."},
                     {"role": "user", "content": prompt},
@@ -90,7 +90,7 @@ Respond ONLY with a JSON object in this exact format:
                 scored_topics.append(t)
 
     # Filter >= 55 and sort descending
-    passed = [t for t in scored_topics if t.get("topic_score", 0) >= 0]
+    passed = [t for t in scored_topics if t.get("topic_score", 0) >= 55]
     passed.sort(key=lambda x: x.get("topic_score", 0), reverse=True)
     
     print(f"Scoring complete. {len(passed)}/{len(topics)} topics passed threshold (>=55).")

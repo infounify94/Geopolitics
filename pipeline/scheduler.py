@@ -18,7 +18,7 @@ from publisher import publish_article
 from scraper import fetch_all_topics
 from scorer import score_topics
 
-ARTICLES_PER_RUN = int(os.environ.get("ARTICLES_PER_RUN", "3"))
+ARTICLES_PER_RUN = int(os.environ.get("ARTICLES_PER_RUN", "5"))
 DELAY_BETWEEN = int(os.environ.get("DELAY_BETWEEN_SECS", "30"))
 
 def load_published_topics() -> set:
