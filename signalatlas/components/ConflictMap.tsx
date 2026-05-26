@@ -108,7 +108,7 @@ export default function ConflictMap({ filter = 'all' }: { filter?: string }) {
             {[['Region',selected.region],['Days',selected.daysActive.toLocaleString()],['Severity',`${selected.intensity}/10`]].map(([k,v]) => (
               <div key={k}>
                 <div style={{ fontFamily:'var(--mono)', fontSize:8, color:'rgba(255,255,255,.35)', textTransform:'uppercase', letterSpacing:'.08em' }}>{k}</div>
-                <div style={{ fontSize:11, color:'rgba(255,255,255,.75)', marginTop:2, fontWeight: k === 'Severity' ? 700 : 400, fontFamily: k === 'Severity' ? 'var(--mono)' : 'var(--sans)', color: k === 'Severity' ? TYPE_CONFIG[selected.type].color : 'rgba(255,255,255,.75)' }}>{v}</div>
+                <div style={{ fontSize:11, marginTop:2, fontWeight: k === 'Severity' ? 700 : 400, fontFamily: k === 'Severity' ? 'var(--mono)' : 'var(--sans)', color: k === 'Severity' ? TYPE_CONFIG[selected.type].color : 'rgba(255,255,255,.75)' }}>{v}</div>
               </div>
             ))}
           </div>

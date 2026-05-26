@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Article } from '@/lib/types';
 
-interface Props { article: Article; variant?: 'main' | 'card'; }
+interface Props { article: Article; variant?: 'main' | 'card'; index?: number; showSummary?: boolean; }
 
 function timeAgo(dateStr: string | null): string {
   if (!dateStr) return '';

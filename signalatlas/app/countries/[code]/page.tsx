@@ -1,6 +1,6 @@
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
-import { getArticlesByCountry } from '@/lib/queries';
+import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
@@ -30,14 +30,7 @@ const COUNTRY_DATA: Record<string, {
   kp: { name:'North Korea', flag:'🇰🇵', region:'Asia', gdp:'$28B', population:'26M', militaryRank:30, influenceScore:35, riskScore:92, alliance:'Axis', economy:'Developing', militaryStrength:'Regional', capital:'Pyongyang', currency:'North Korean Won', overview:'Most sanctioned country on Earth. Rapidly expanding nuclear arsenal. Kim Jong-un sent troops to fight alongside Russia in Ukraine. ICBM program achieving intercontinental range. Pursuing miniaturised nuclear warheads.', economyDetail:'$28B GDP — largely isolated. China provides 90%+ of trade. Sanctions-busting via ship-to-ship transfers, crypto hacking ($1.7B stolen in 2022). Workers sent to Russia and China. Arms sales to Russia (artillery shells, missiles) generating revenue.', militaryDetail:'Nuclear warheads: 40-60 estimated. ICBMs tested: Hwasong-17 (15,000km range). Hypersonic glide vehicle tested. 1.2M active military personnel. 10,000+ troops sent to Russia (Ukraine front). Conventional forces significant but aging.', foreignPolicy:'Kim-Putin alignment (June 2024 treaty). China as primary patron — but relationship strained by nuclear tests. Rare direct diplomacy with US failed (2018-2019 Singapore). South Korea — no reunification dialogue. Japan — historical hostility.', tradePartners:['China (>90%)','Russia'], strategicAlliances:['Russia (2024 treaty)','China (cautious)'], keyRisks:['Nuclear miscalculation','Kim succession instability','US military action','Regime collapse causing refugee crisis'] },
 };
 
-async function getCountryArticles(countryName: string) {
-  try {
-    const { getArticlesByCountry } = await import('@/lib/queries');
-    return await getArticlesByCountry(countryName, 6);
-  } catch {
-    return [];
-  }
-}
+
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { code } = await params;
@@ -57,10 +50,9 @@ export default async function CountryDetailPage({ params }: Props) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://signalatlas.com';
 
-  // Fetch related articles
+  // Fetch related articles — static import (edge-compatible)
   let articles: any[] = [];
   try {
-    const { supabase } = await import('@/lib/supabase');
     const { data } = await supabase
       .from('articles')
       .select('id,slug,title,published_at,category,meta_description')
