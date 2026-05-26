@@ -124,7 +124,7 @@ export default function Nav() {
             <div className="nav-live-dot" />
             LIVE
           </div>
-          <Link href="#subscribe" className="nav-link nav-cta">Subscribe →</Link>
+          <Link href="/#subscribe" className="nav-link nav-cta">Subscribe →</Link>
         </div>
 
         {/* Mobile toggle */}
@@ -156,7 +156,7 @@ export default function Nav() {
               {label}
             </Link>
           ))}
-          <Link href="#subscribe" onClick={() => setMobileOpen(false)} style={{ fontSize: 14, fontWeight: 600, color: 'var(--amber)', padding: '10px 0', fontFamily: 'var(--mono)', letterSpacing: '.04em' }}>
+          <Link href="/#subscribe" onClick={() => setMobileOpen(false)} style={{ fontSize: 14, fontWeight: 600, color: 'var(--amber)', padding: '10px 0', fontFamily: 'var(--mono)', letterSpacing: '.04em' }}>
             Subscribe →
           </Link>
         </div>

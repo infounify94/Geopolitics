@@ -56,10 +56,10 @@ export default async function ResearchPage() {
           </p>
           <div style={{ display: 'flex', gap: '2rem', marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,.1)', flexWrap: 'wrap' }}>
             {[
-              [String(articles.length > 0 ? articles.length + '+' : '—'), 'Articles Available'],
-              ['Daily', 'New Research'],
               ['17', 'Analytical Angles'],
+              ['10', 'Intelligence Themes'],
               ['195', 'Nations Covered'],
+              ['5-Stage', 'Verification Process'],
             ].map(([n, l]) => (
               <div key={l}>
                 <div style={{ fontFamily: 'var(--serif)', fontSize: '1.5rem', fontWeight: 700, color: 'var(--amber)' }}>{n}</div>

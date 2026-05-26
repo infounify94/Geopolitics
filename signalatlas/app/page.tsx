@@ -1,5 +1,4 @@
 import Nav from '@/components/Nav';
-import Ticker from '@/components/Ticker';
 import Hero from '@/components/Hero';
 import ArticleCard from '@/components/ArticleCard';
 import ConflictMonitor from '@/components/ConflictMonitor';
@@ -14,7 +13,6 @@ import {
   getFeaturedArticles,
   getRecentArticles,
   getActiveConflicts,
-  getTickerItems,
   getDashboardStats,
   getGraphConnections,
 } from '@/lib/queries';
@@ -22,11 +20,10 @@ import {
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [featured, recent, conflicts, ticker, dashStats, graphData] = await Promise.all([
+  const [featured, recent, conflicts, dashStats, graphData] = await Promise.all([
     getFeaturedArticles(3),
     getRecentArticles(6),
     getActiveConflicts(),
-    getTickerItems(),
     getDashboardStats(),
     getGraphConnections(),
   ]);
