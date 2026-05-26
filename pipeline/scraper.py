@@ -8,30 +8,47 @@ GNEWS_API_KEY = os.environ.get("GNEWS_API_KEY", "6b4185e72e364da457bb56cbaa7e22a
 NEWS_API_KEY = os.environ.get("NEWS_API_KEY", "")
 
 RSS_FEEDS = [
-    # International
-    "http://feeds.bbci.co.uk/news/world/rss.xml",           # BBC World
-    "https://www.aljazeera.com/xml/rss/all.xml",            # Al Jazeera
-    "https://rss.scmp.com/rss/5",                           # South China Morning Post
-    "https://timesofindia.indiatimes.com/rss.cms",          # Times of India
-    "https://thewire.in/feed",                               # The Wire India
-    "https://scroll.in/feed",                               # Scroll.in India
+    # International news
+    "http://feeds.bbci.co.uk/news/world/rss.xml",              # BBC World
+    "https://www.aljazeera.com/xml/rss/all.xml",               # Al Jazeera
+    "https://rss.scmp.com/rss/5",                              # South China Morning Post
+    "https://timesofindia.indiatimes.com/rss.cms",             # Times of India
+    "https://thewire.in/feed",                                  # The Wire India
+    "https://scroll.in/feed",                                  # Scroll.in India
     "https://www.thehindu.com/news/international/?service=rss", # The Hindu
-    # Specialist
-    "https://www.imf.org/en/News/Rss",                      # IMF news
-    "https://news.un.org/feed/subscribe/en/news/all/rss.xml", # UN News
-    "https://www.worldbank.org/en/news/rss",                # World Bank
+    # Multilateral institutions
+    "https://www.imf.org/en/News/Rss",                         # IMF news
+    "https://news.un.org/feed/subscribe/en/news/all/rss.xml",  # UN News
+    "https://www.worldbank.org/en/news/rss",                   # World Bank
+    # Science / Medical / Technology
+    "https://www.who.int/feeds/entity/news/en/rss.xml",        # WHO
+    "https://feeds.nature.com/news/rss/most-read",             # Nature News
+    "https://www.sciencedaily.com/rss/top/science.xml",        # Science Daily
+    # Finance / Economy
+    "https://feeds.bloomberg.com/markets/news.rss",            # Bloomberg Markets
+    "https://www.ft.com/?format=rss",                          # Financial Times
 ]
 
 def fetch_gnews_topics() -> list[dict]:
-    """Layer 1: Fetch top geopolitical news from GNews API."""
+    """Layer 1: Fetch top geopolitical news from GNews API across all strategic domains."""
     if not GNEWS_API_KEY:
         return []
-        
+
+    # Broad query covering all domains: geopolitics, economics, health, surveillance, environment
+    query = (
+        'geopolitics OR sanctions OR "proxy war" OR "economic warfare" OR "trade war" '
+        'OR "debt trap" OR "IMF" OR "World Bank" OR "military aid" OR "arms deal" '
+        'OR "clinical trial" OR "pharmaceutical" OR "bioweapon" OR "pandemic" '
+        'OR surveillance OR "data breach" OR "intelligence agency" '
+        'OR "rare earth" OR "semiconductor" OR "supply chain" '
+        'OR "carbon credit" OR "geoengineering" OR "water rights" '
+        'OR "media bias" OR "disinformation" OR "propaganda"'
+    )
     url = "https://gnews.io/api/v4/search"
     params = {
-        "q": "geopolitics OR sanctions OR \"proxy war\" OR \"economic warfare\" OR \"trade war\"",
-        "lang": "en",
-        "max": 10,
+        "q":      query,
+        "lang":   "en",
+        "max":    10,
         "apikey": GNEWS_API_KEY,
         "sortby": "publishedAt"
     }
@@ -99,9 +116,14 @@ def fetch_rss_topics() -> list[dict]:
             for entry in feed.entries[:3]:
                 title = getattr(entry, "title", "")
                 desc = getattr(entry, "summary", getattr(entry, "description", ""))
-                
-                # Basic filter to ensure it's geopolitics related
-                keywords = ["war", "sanction", "trade", "military", "election", "strike", "treaty", "imf", "protest", "coup"]
+
+                # Broader keyword filter to match all domains we cover
+                keywords = [
+                    "war", "sanction", "trade", "military", "election", "strike", "treaty",
+                    "imf", "protest", "coup", "pharmaceutical", "clinical trial", "surveillance",
+                    "debt", "nuclear", "intelligence", "pipeline", "mineral",
+                    "carbon", "bioweapon", "pandemic", "outbreak", "semiconductor",
+                ]
                 if not any(k in title.lower() or k in desc.lower() for k in keywords):
                     continue
                     
@@ -133,10 +155,14 @@ def fetch_wikipedia_recent_changes() -> list[dict]:
         response = requests.get(url, params=params, headers=headers, timeout=10)
         response.raise_for_status()
         data = response.json()
-        
-        # Look for heavy edits on country/conflict pages
-        geo_keywords = ["War", "Crisis", "Conflict", "Protest", "Sanctions", "Coup", "Elections"]
-        
+
+        # Look for heavy edits on strategic topic pages
+        geo_keywords = [
+            "War", "Crisis", "Conflict", "Protest", "Sanctions", "Coup", "Elections",
+            "Pandemic", "Outbreak", "Treaty", "Missile", "Nuclear", "Intelligence",
+            "Surveillance", "Pharmaceutical", "Climate", "Drought", "Debt", "IMF",
+        ]
+
         topics = []
         for rc in data.get("query", {}).get("recentchanges", []):
             title = rc.get("title", "")
@@ -148,11 +174,11 @@ def fetch_wikipedia_recent_changes() -> list[dict]:
                     "url": f"https://en.wikipedia.org/wiki/{title.replace(' ', '_')}",
                     "publishedAt": rc.get("timestamp", datetime.now().isoformat()),
                 })
-        
+
         # Take up to 5 unique wiki topics
         unique_wiki = {t["title"]: t for t in topics}.values()
         return list(unique_wiki)[:5]
-        
+
     except Exception as e:
         print(f"Error fetching Wikipedia RC: {e}")
         return []
