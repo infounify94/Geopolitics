@@ -8,10 +8,10 @@ import requests
 from datetime import datetime
 
 SUPABASE_URL = "https://klmzxnkgrhdfhilpevvu.supabase.co"
-SUPABASE_SERVICE_KEY = os.environ.get(
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsbXp4bmtncmhkZmhpbHBldnZ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTY4NDc5NiwiZXhwIjoyMDk1MjYwNzk2fQ.-IhO6NVVVeGFeaU242seLwEp8JkotetYhdRk_jnF-E8"
-)
+SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+
+if not SUPABASE_SERVICE_KEY:
+    raise ValueError("Missing SUPABASE_SERVICE_ROLE_KEY environment variable. Cannot publish to Supabase.")
 NEXT_SITE_URL = os.environ.get("NEXT_PUBLIC_SITE_URL", "http://localhost:3000")
 
 HEADERS = {
