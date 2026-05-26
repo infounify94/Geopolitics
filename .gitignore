@@ -1,0 +1,4 @@
+
+.env
+pipeline/.env
+*.bat.secret

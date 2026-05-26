@@ -1,119 +1,39 @@
+// IMPORTANT: This is a SERVER COMPONENT — no 'use client' directive.
+// Hover effects are handled by pure CSS via a <style> tag (not JS event handlers).
+// This ensures the page is fully crawlable by Google, Bing, and AI bots.
+
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import type { Metadata } from 'next';
+
+// ISR: revalidate every 3600 seconds — Google sees fresh server-rendered HTML
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Research Topics — Geopolitical Intelligence by Theme | SignalAtlas',
   description: 'Browse SignalAtlas intelligence by topic: Power Networks, Economic Warfare, Sanctions, Conflicts, Arms Trade, India Lens, Global South, and Media Bias.',
   keywords: ['geopolitical topics', 'power networks', 'economic warfare', 'sanctions analysis', 'arms trade', 'India geopolitics', 'global south'],
+  alternates: { canonical: 'https://signalatlas.com/topics' },
 };
 
 const TOPICS = [
-  {
-    slug: 'power-networks',
-    label: 'Power Networks',
-    icon: '🕸️',
-    color: '#E24B4A',
-    bg: '#FEF2F2',
-    count: 24,
-    desc: 'State capture, elite networks, shadow influence, and the hidden architecture of geopolitical power.',
-    keywords: ['oligarchs', 'shadow state', 'deep state', 'lobbying', 'covert influence'],
-  },
-  {
-    slug: 'economic-warfare',
-    label: 'Economic Warfare',
-    icon: '⚔️',
-    color: '#E8931A',
-    bg: '#FFF7ED',
-    count: 31,
-    desc: 'Trade wars, currency manipulation, debt traps, resource weaponisation, and financial coercion.',
-    keywords: ['trade war', 'currency war', 'debt trap', 'belt and road', 'petrodollar'],
-  },
-  {
-    slug: 'sanctions',
-    label: 'Sanctions Intel',
-    icon: '🔒',
-    color: '#3B82F6',
-    bg: '#EFF6FF',
-    count: 18,
-    desc: 'Tracking sanctions regimes, evasion networks, secondary sanctions, and enforcement patterns globally.',
-    keywords: ['OFAC', 'SWIFT', 'asset freeze', 'oil price cap', 'sanctions evasion'],
-  },
-  {
-    slug: 'conflicts',
-    label: 'Active Conflicts',
-    icon: '🔴',
-    color: '#DC2626',
-    bg: '#FEF2F2',
-    count: 42,
-    desc: 'Battlefield analysis, proxy wars, military operations, and escalation dynamics across 18+ active theatres.',
-    keywords: ['Ukraine', 'Gaza', 'Sudan', 'proxy war', 'military operations'],
-  },
-  {
-    slug: 'arms-trade',
-    label: 'Arms & Security',
-    icon: '🛡️',
-    color: '#7C3AED',
-    bg: '#F5F3FF',
-    count: 16,
-    desc: 'Defence transfers, military aid, arms embargoes, and the politics of weapons supply chains.',
-    keywords: ['SIPRI', 'arms embargo', 'military aid', 'defence spending', 'F-35'],
-  },
-  {
-    slug: 'india-lens',
-    label: 'India Lens',
-    icon: '🇮🇳',
-    color: '#FF9933',
-    bg: '#FFF8F0',
-    count: 38,
-    desc: "Strategic implications of every major global event for India's economy, security, and diplomacy.",
-    keywords: ["India's strategic interests", 'India foreign policy', 'India economy', 'Modi diplomacy', 'QUAD'],
-  },
-  {
-    slug: 'global-south',
-    label: 'Global South',
-    icon: '🌍',
-    color: '#059669',
-    bg: '#ECFDF5',
-    count: 22,
-    desc: 'BRICS, emerging economies, debt relief, non-alignment, and the geopolitics of development.',
-    keywords: ['BRICS', 'non-alignment', 'debt relief', 'Africa', 'Latin America'],
-  },
-  {
-    slug: 'media-bias',
-    label: 'Media Bias',
-    icon: '📡',
-    color: '#0891B2',
-    bg: '#ECFEFF',
-    count: 11,
-    desc: 'Narrative warfare, propaganda analysis, disinformation campaigns, and media influence mapping.',
-    keywords: ['propaganda', 'disinformation', 'narrative warfare', 'RT', 'media ownership'],
-  },
-  {
-    slug: 'asia',
-    label: 'Asia Outlook',
-    icon: '🌏',
-    color: '#0B6E6E',
-    bg: '#F0FDFA',
-    count: 29,
-    desc: 'China-ASEAN dynamics, Japan rearmament, Pacific power competition, and Indo-Pacific strategy.',
-    keywords: ['China', 'ASEAN', 'Indo-Pacific', 'Japan', 'South Korea', 'Taiwan'],
-  },
-  {
-    slug: 'energy-trade',
-    label: 'Energy & Trade',
-    icon: '⚡',
-    color: '#D97706',
-    bg: '#FFFBEB',
-    count: 27,
-    desc: 'Oil, LNG, rare earths, supply chain disruptions, chokepoints, and energy geopolitics.',
-    keywords: ['LNG', 'oil price', 'rare earths', 'supply chain', 'Strait of Hormuz'],
-  },
+  { slug: 'power-networks',  label: 'Power Networks',  icon: '🕸️', color: '#E24B4A', bg: '#FEF2F2', count: 24, desc: 'State capture, elite networks, shadow influence, and the hidden architecture of geopolitical power.', keywords: ['oligarchs', 'shadow state', 'deep state', 'lobbying', 'covert influence'] },
+  { slug: 'economic-warfare', label: 'Economic Warfare', icon: '⚔️', color: '#E8931A', bg: '#FFF7ED', count: 31, desc: 'Trade wars, currency manipulation, debt traps, resource weaponisation, and financial coercion.', keywords: ['trade war', 'currency war', 'debt trap', 'belt and road', 'petrodollar'] },
+  { slug: 'sanctions',       label: 'Sanctions Intel',  icon: '🔒', color: '#3B82F6', bg: '#EFF6FF', count: 18, desc: 'Tracking sanctions regimes, evasion networks, secondary sanctions, and enforcement patterns globally.', keywords: ['OFAC', 'SWIFT', 'asset freeze', 'oil price cap', 'sanctions evasion'] },
+  { slug: 'conflicts',       label: 'Active Conflicts', icon: '🔴', color: '#DC2626', bg: '#FEF2F2', count: 42, desc: 'Battlefield analysis, proxy wars, military operations, and escalation dynamics across 18+ active theatres.', keywords: ['Ukraine', 'Gaza', 'Sudan', 'proxy war', 'military operations'] },
+  { slug: 'arms-trade',      label: 'Arms & Security',  icon: '🛡️', color: '#7C3AED', bg: '#F5F3FF', count: 16, desc: 'Defence transfers, military aid, arms embargoes, and the politics of weapons supply chains.', keywords: ['SIPRI', 'arms embargo', 'military aid', 'defence spending', 'F-35'] },
+  { slug: 'india-lens',      label: 'India Lens',       icon: '🇮🇳', color: '#FF9933', bg: '#FFF8F0', count: 38, desc: "Strategic implications of every major global event for India's economy, security, and diplomacy.", keywords: ["India's strategic interests", 'India foreign policy', 'India economy', 'Modi diplomacy', 'QUAD'] },
+  { slug: 'global-south',    label: 'Global South',     icon: '🌍', color: '#059669', bg: '#ECFDF5', count: 22, desc: 'BRICS, emerging economies, debt relief, non-alignment, and the geopolitics of development.', keywords: ['BRICS', 'non-alignment', 'debt relief', 'Africa', 'Latin America'] },
+  { slug: 'media-bias',      label: 'Media Bias',       icon: '📡', color: '#0891B2', bg: '#ECFEFF', count: 11, desc: 'Narrative warfare, propaganda analysis, disinformation campaigns, and media influence mapping.', keywords: ['propaganda', 'disinformation', 'narrative warfare', 'RT', 'media ownership'] },
+  { slug: 'asia',            label: 'Asia Outlook',     icon: '🌏', color: '#0B6E6E', bg: '#F0FDFA', count: 29, desc: 'China-ASEAN dynamics, Japan rearmament, Pacific power competition, and Indo-Pacific strategy.', keywords: ['China', 'ASEAN', 'Indo-Pacific', 'Japan', 'South Korea', 'Taiwan'] },
+  { slug: 'energy-trade',    label: 'Energy & Trade',   icon: '⚡', color: '#D97706', bg: '#FFFBEB', count: 27, desc: 'Oil, LNG, rare earths, supply chain disruptions, chokepoints, and energy geopolitics.', keywords: ['LNG', 'oil price', 'rare earths', 'supply chain', 'Strait of Hormuz'] },
 ];
 
-const ALL_KEYWORDS = ['geopolitics', 'war', 'sanctions', 'diplomacy', 'trade war', 'military', 'coup', 'elections',
+const ALL_KEYWORDS = [
+  'geopolitics', 'war', 'sanctions', 'diplomacy', 'trade war', 'military', 'coup', 'elections',
   'NATO', 'BRICS', 'China', 'Russia', 'India', 'Middle East', 'Africa', 'proxy war', 'nuclear',
-  'oil', 'LNG', 'rare earths', 'supply chain', 'IMF', 'World Bank', 'debt trap'];
+  'oil', 'LNG', 'rare earths', 'supply chain', 'IMF', 'World Bank', 'debt trap',
+];
 
 export default function TopicsPage() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://signalatlas.com';
@@ -131,26 +51,36 @@ export default function TopicsPage() {
     })),
   };
 
+  const totalArticles = TOPICS.reduce((s, t) => s + t.count, 0);
+
   return (
     <>
+      {/* CSS hover effects — pure CSS, no JS, fully crawlable */}
+      <style>{`
+        .topic-card { transition: box-shadow .15s, transform .15s; }
+        .topic-card:hover { box-shadow: 0 4px 20px rgba(11,22,40,.1); transform: translateY(-2px); }
+        .kw-tag { transition: border-color .15s, color .15s; }
+        .kw-tag:hover { border-color: var(--amber) !important; color: var(--amber) !important; }
+      `}</style>
+
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Nav />
 
-      {/* Header */}
+      {/* Dark navy header */}
       <div style={{ background: 'var(--navy)', padding: '3rem 2rem 2.5rem', borderBottom: '1px solid rgba(255,255,255,.08)' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--amber)', letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: '.5rem' }}>
             Intelligence Taxonomy
           </div>
           <h1 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 700, color: 'var(--white)', letterSpacing: '-.02em', marginBottom: '.75rem' }}>
-            Topics & Themes
+            Topics &amp; Themes
           </h1>
           <p style={{ fontSize: 15, color: 'rgba(255,255,255,.55)', maxWidth: 560, lineHeight: 1.7 }}>
             Every SignalAtlas article is classified across 10 analytical themes. Browse by the intelligence domain that matters most to you.
           </p>
           <div style={{ display: 'flex', gap: '2rem', marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,.1)', flexWrap: 'wrap' }}>
             {[
-              [`${TOPICS.reduce((s, t) => s + t.count, 0)}+`, 'Total Articles'],
+              [`${totalArticles}+`, 'Total Articles'],
               ['10', 'Intelligence Themes'],
               ['Daily', 'New Analysis'],
               ['195', 'Nations Covered'],
@@ -178,6 +108,7 @@ export default function TopicsPage() {
               <a
                 key={t.slug}
                 href={`/topics/${t.slug}`}
+                className="topic-card"
                 style={{
                   display: 'block',
                   background: 'var(--white)',
@@ -186,11 +117,8 @@ export default function TopicsPage() {
                   borderRadius: 'var(--radius)',
                   padding: '1.25rem',
                   textDecoration: 'none',
-                  transition: 'box-shadow .15s, transform .15s',
                   position: 'relative',
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(11,22,40,.1)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'none'; (e.currentTarget as HTMLElement).style.transform = 'none'; }}
               >
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '.75rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -229,6 +157,7 @@ export default function TopicsPage() {
               <a
                 key={k}
                 href={`/research?q=${encodeURIComponent(k)}`}
+                className="kw-tag"
                 style={{
                   fontSize: i < 8 ? 14 : i < 16 ? 12 : 11,
                   fontWeight: i < 8 ? 600 : 400,
@@ -240,10 +169,7 @@ export default function TopicsPage() {
                   textDecoration: 'none',
                   fontFamily: 'var(--mono)',
                   letterSpacing: '.04em',
-                  transition: 'border-color .15s, color .15s',
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--amber)'; (e.currentTarget as HTMLElement).style.color = 'var(--amber)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLElement).style.color = i < 6 ? 'var(--navy)' : i < 14 ? 'var(--ink2)' : 'var(--ink3)'; }}
               >
                 {k}
               </a>
