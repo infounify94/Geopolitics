@@ -305,6 +305,52 @@ export default async function ArticlePage({ params }: Props) {
               </div>
             )}
 
+            {/* Elegant, AdSense-Compliant Support & Donation Card */}
+            <div style={{
+              margin: '2.5rem 0',
+              padding: '1.5rem',
+              background: 'var(--off)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 20 }}>☕</span>
+                <span style={{ fontFamily: 'var(--serif)', fontSize: 15, fontWeight: 700, color: 'var(--navy)' }}>
+                  Support Independent Research
+                </span>
+              </div>
+              <p style={{ fontSize: 13, color: 'var(--ink2)', lineHeight: 1.6, margin: 0 }}>
+                If you find our evidence-based, unsensationalized geopolitical analysis valuable, consider supporting our independent research network. Your contributions directly fund data feeds, public registry audits, and deep Global South coverage.
+              </p>
+              <div style={{ marginTop: 4 }}>
+                <a
+                  href={process.env.NEXT_PUBLIC_DONATION_URL || "https://buymeacoffee.com/signalatlas"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    fontFamily: 'var(--mono)',
+                    fontSize: 10,
+                    fontWeight: 600,
+                    background: 'var(--navy)',
+                    color: 'var(--white)',
+                    border: '1px solid var(--navy)',
+                    padding: '8px 16px',
+                    borderRadius: 'var(--radius)',
+                    textDecoration: 'none',
+                    letterSpacing: '.06em'
+                  }}
+                >
+                  SUPPORT SIGNALATLAS ↗
+                </a>
+              </div>
+            </div>
+
             {/* FAQ Section — Critical for SEO */}
             {article.faq?.length > 0 && (
               <div style={{ marginTop: '3.5rem' }}>
