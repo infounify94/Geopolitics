@@ -910,18 +910,20 @@ footer {
 }
 .article-body h2 {
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: clamp(1.1rem, 3.5vw, 1.5rem);
   font-weight: 700;
   color: var(--navy);
   margin: 38px 0 18px;
   letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 .article-body h3 {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: clamp(1rem, 3vw, 1.2rem);
   font-weight: 600;
   color: var(--navy);
   margin: 28px 0 14px;
+  line-height: 1.35;
 }
 .article-body p {
   margin-bottom: 20px;
@@ -1003,4 +1005,22 @@ footer {
   .conflict-grid { grid-template-columns: 1fr; }
   .section { padding: 2rem 1.25rem; }
   .main, .nav-inner { padding: 20px 1.25rem; }
+
+  /* Article body — tighter mobile sizing */
+  .article-body {
+    font-size: 15.5px;
+    line-height: 1.78;
+  }
+  .article-body h2 {
+    font-size: 1.15rem;
+    margin: 28px 0 12px;
+  }
+  .article-body h3 {
+    font-size: 1.05rem;
+    margin: 20px 0 10px;
+  }
+  .article-body blockquote {
+    font-size: 15px;
+    padding: 10px 16px;
+  }
 }

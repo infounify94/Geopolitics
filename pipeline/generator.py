@@ -51,26 +51,34 @@ You MUST output your ENTIRE response as a SINGLE valid JSON object matching the 
 Do NOT output markdown text outside of the JSON block.
 
 CRITICAL WRITING INSTRUCTIONS:
-- Write a LONG, deeply researched article. Minimum 800 words of actual article content.
+- Write a LONG, deeply researched article. Minimum 1000 words of actual article content.
 - Do NOT use robotic step-by-step headers like "Angle 1" or "Section 4: What Happened".
 - You have 17 analytical angles (from the master prompt) — weave them NATURALLY into flowing prose.
 - Use fluid transitions. Think "Foreign Affairs magazine meets Bloomberg Intelligence brief".
 - Vary your structure by story type: a coup article reads differently from a sanctions article.
 - Start strong: the first paragraph must hook the reader with the core finding.
 - Use specific numbers, named actors, documented events — not vague generalities.
+- CRITICAL: Every section heading MUST be unique. NEVER repeat the same heading or near-identical phrasing.
 - Use subheadings that reveal the finding, not just label the section.
   BAD: "The Economic Impact" → GOOD: "How a $40B Trade Route Died Quietly"
+  BAD: "What Happened Next" → GOOD: "The 48-Hour Window That Changed the Calculus"
 - Bold the single most important finding per section.
+- CRITICAL: Every bullet point and list item MUST include a 1-2 sentence explanation after the label.
+  BAD: "• India" → GOOD: "• India — As a major importer dependent on this corridor, New Delhi faces a 12% cost increase in energy imports if the route is disrupted."
+  BAD: "• Sanctions tightened" → GOOD: "• Sanctions tightened — The US Treasury designated 14 additional entities in February 2024, cutting off access to dollar clearing for all affiliated firms."
 - Avoid repetitive phrases. Avoid weak hedges like "some say" or "it is reported".
+- Never start two consecutive paragraphs with the same word.
 - Format the actual article text using standard markdown in the `content` field.
+- For summary_bullets: each bullet must be a STANDALONE FINDING with a complete sentence — not a label.
+  BAD: "Geopolitical significance" → GOOD: "The route carries $3.4 trillion in annual trade, making any disruption immediately felt in European energy markets."
 
 JSON SCHEMA EXPECTED:
 {{
   "title": "Article headline — state the finding, not just the event",
   "slug": "url-friendly-slug-max-80-chars",
   "meta_description": "155 char SEO description including India angle if relevant",
-  "content": "The full markdown article — minimum 800 words — flowing prose with section headers, bold findings, timeline if relevant, India angle, who-benefits section, and 3 future scenarios. NO robotic numbering.",
-  "summary_bullets": ["Standalone finding 1", "Standalone finding 2", "Standalone finding 3", "Standalone finding 4"],
+  "content": "The full markdown article — minimum 1000 words — flowing prose with unique section headers, bold findings, timeline if relevant, India angle, who-benefits section, and 3 future scenarios. NO robotic numbering. NO duplicate headings. Every list item must have a 1-2 sentence explanation.",
+  "summary_bullets": ["Complete standalone finding sentence 1", "Complete standalone finding sentence 2", "Complete standalone finding sentence 3", "Complete standalone finding sentence 4"],
   "category": "One of: POWER NETWORKS, ECONOMIC WARFARE, INDIA LENS, CONFLICTS, MEDIA BIAS, SANCTIONS, ARMS TRADE, GLOBAL SOUTH",
   "confidence_level": "High | Medium | Low",
   "evidence_level": "Strong | Moderate | Limited",
@@ -84,10 +92,10 @@ JSON SCHEMA EXPECTED:
     {{"name": "Reuters", "url": "https://...", "used_for": "Primary reporting"}}
   ],
   "faq": [
-    {{"question": "Why is this happening now?", "answer": "2-3 sentence direct answer."}},
-    {{"question": "How does this affect India?", "answer": "2-3 sentence direct answer."}},
-    {{"question": "Who benefits from this?", "answer": "2-3 sentence direct answer."}},
-    {{"question": "What happens next?", "answer": "2-3 sentence direct answer."}}
+    {{"question": "Why is this happening now?", "answer": "2-3 sentence direct answer with specific facts."}},
+    {{"question": "How does this affect India?", "answer": "2-3 sentence direct answer with trade/security/diplomacy angle."}},
+    {{"question": "Who benefits from this?", "answer": "2-3 sentence direct answer naming specific actors."}},
+    {{"question": "What happens next?", "answer": "2-3 sentence direct answer with timeline and conditions."}}
   ],
   "chart_suggestions": [
     {{"type": "bar", "description": "Defence spending comparison of involved nations 2020-2026"}}
