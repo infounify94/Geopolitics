@@ -57,9 +57,10 @@ export default function Footer() {
         <div className="footer-bottom">
           <div>© {new Date().getFullYear()} SignalAtlas · All research based on publicly available sources</div>
           <div className="footer-bottom-links">
-            <Link href="/about">Methodology</Link>
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/about">Sources</Link>
+            <Link href="/about">About Us</Link>
+            <Link href="/contact">Contact</Link>
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/sitemap.xml">Sitemap</Link>
           </div>
         </div>
       </div>
