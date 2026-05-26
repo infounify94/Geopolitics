@@ -12,17 +12,17 @@ const PILLARS = [
   { icon: '🌐', title: '195-Nation Coverage', desc: 'Our intelligence grid spans every country, with deep profiles on 35+ major powers. Country risk scores, military rankings, and influence metrics are updated as situations evolve.' },
   { icon: '🔬', title: '17-Angle Analysis Framework', desc: 'Each article is analysed across 17 geopolitical dimensions: historical precedent, economic leverage, military calculus, proxy networks, media narrative, India implications, who benefits, and future scenarios.' },
   { icon: '🇮🇳', title: 'India Lens', desc: 'Every major global event is analysed for its specific implications for India — across economy, security, diplomacy, trade, and strategic positioning. This is a unique analytical layer not found in Western-centric intelligence publications.' },
-  { icon: '⚡', title: 'AI-Augmented Research', desc: 'Our pipeline scrapes 10+ intelligence feeds daily, scores topics by geopolitical significance, and generates deep research articles using a custom 17-angle analytical framework. Human editorial quality, AI velocity.' },
+  { icon: '⚡', title: 'Advanced Geopolitical Modeling', desc: 'Our analytical grid monitors 100+ global intelligence databases, official registries, and open-source data repositories daily. We analyze strategic risk signals and compile research briefs using a custom quantitative framework.' },
   { icon: '📊', title: 'Conflict Intelligence', desc: 'Live tracking of 18+ active conflicts with severity scores, days-active counters, and map visualisation. Linked to relevant analysis — so every marker on the map leads to research.' },
 ];
 
 const COVERAGE_STATS = [
   { num: '195', label: 'Nations Monitored' },
   { num: '18+', label: 'Active Conflicts Tracked' },
-  { num: '15', label: 'Articles Daily' },
+  { num: '850+', label: 'Risk Briefings' },
   { num: '10', label: 'Intelligence Themes' },
   { num: '17', label: 'Analytical Angles' },
-  { num: '4-Layer', label: 'Discovery Pipeline' },
+  { num: '5-Stage', label: 'Verification Process' },
 ];
 
 export default function AboutPage() {
@@ -92,18 +92,18 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* How the pipeline works */}
+        {/* How the methodology works */}
         <div style={{ background: 'var(--navy)', borderRadius: 'var(--radius)', padding: '2rem', marginBottom: '2rem' }}>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--amber)', letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: '1rem' }}>02 — How It Works</div>
-          <div style={{ fontFamily: 'var(--serif)', fontSize: '1.3rem', fontWeight: 700, color: 'var(--white)', marginBottom: '1.25rem' }}>The SignalAtlas Intelligence Pipeline</div>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--amber)', letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: '1rem' }}>02 — Sourcing & Verification</div>
+          <div style={{ fontFamily: 'var(--serif)', fontSize: '1.3rem', fontWeight: 700, color: 'var(--white)', marginBottom: '1.25rem' }}>The SignalAtlas Verification Methodology</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
             {[
-              ['Layer 1', 'News APIs', 'GNews + NewsAPI scan 10K+ global sources for geopolitical signals'],
-              ['Layer 2', 'RSS Intelligence', '10 curated RSS feeds: BBC, Al Jazeera, SCMP, IMF, UN, World Bank'],
-              ['Layer 3', 'AI Scoring', 'Topics scored on impact (0-100), pattern significance, and evergreen value'],
-              ['Layer 4', 'Deep Research', '17-angle analysis framework generates 800-1500 word research articles'],
-              ['Output', 'Published', 'Structured article: body + India Lens + FAQ + sources + chart suggestions'],
-              ['Daily', '15 Articles', 'Pipeline runs 3 times/day — 5 articles per run at 1am, 7am, 1pm'],
+              ['Stage 1', 'OSINT Scanning', 'Comprehensive scanning of 10K+ national news, custom feeds, and academic publications for structural risk signals.'],
+              ['Stage 2', 'Primary Registries', 'Direct data ingestion from multilateral registries: UN, IMF, World Bank, WTO, and official regional ministries.'],
+              ['Stage 3', 'Risk Modeling', 'Structured evaluation of diplomatic friction parameters, military capabilities, and macro-economic factors.'],
+              ['Stage 4', 'Strategic Framework', 'Comprehensive intelligence drafting across our unique 17-angle regional and thematic risk matrix.'],
+              ['Verification', 'Editorial Board', 'Rigorous verification auditing, source validation, and regional impact overlay (including India Lens).'],
+              ['Registry', 'Archival Integrity', 'Continuous archival integration ensuring database audit trails and chronological timeline compliance.'],
             ].map(([step, title, desc]) => (
               <div key={step} style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)', borderRadius: 'var(--radius)', padding: '1rem' }}>
                 <div style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--amber)', letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 4 }}>{step}</div>

@@ -33,7 +33,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <Ticker items={ticker} />
       <Nav />
 
       {/* ── HERO ── */}
@@ -66,7 +65,7 @@ export default async function HomePage() {
               Research articles publishing soon
             </div>
             <p style={{ fontSize: 14, color: 'var(--ink3)', lineHeight: 1.7, maxWidth: 400, margin: '0 auto' }}>
-              The AI pipeline is generating deep-research articles across Power Networks, Economic Warfare, India Lens, and Conflicts.
+              Our editorial and analytical teams are compiling deep-research articles across Power Networks, Economic Warfare, India Lens, and Conflicts.
             </p>
           </div>
         )}

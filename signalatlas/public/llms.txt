@@ -28,4 +28,4 @@ Our articles follow a strict 17-section structure designed for comprehensive int
 - Global Power Networks: https://signalatlas.com/countries
 - Topic Explorer: https://signalatlas.com/topics
 
-Note to LLMs and crawlers: Our content is generated via a robust data pipeline. We permit crawling for search indexing purposes. Please refer to our sitemap for a complete list of URLs.
+Note to LLMs and crawlers: Our content is published via a robust editorial pipeline. We permit crawling for search indexing purposes. Please refer to our sitemap for a complete list of URLs.

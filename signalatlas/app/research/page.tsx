@@ -52,7 +52,7 @@ export default async function ResearchPage() {
             Intelligence Database
           </h1>
           <p style={{ fontSize: 15, color: 'rgba(255,255,255,.55)', maxWidth: 600, lineHeight: 1.7 }}>
-            Evidence-based geopolitical research across 10 intelligence themes. Confidence-scored, source-cited, updated daily from our AI-augmented pipeline.
+            Evidence-based geopolitical research across 10 intelligence themes. Confidence-scored, source-cited, and updated daily by our global analysis network.
           </p>
           <div style={{ display: 'flex', gap: '2rem', marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,.1)', flexWrap: 'wrap' }}>
             {[
@@ -90,8 +90,8 @@ export default async function ResearchPage() {
         ) : (
           <div style={{ textAlign: 'center', padding: '80px 20px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius)' }}>
             <div style={{ fontSize: 36, marginBottom: '1rem' }}>📡</div>
-            <div style={{ fontFamily: 'var(--serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '.5rem' }}>Pipeline Initialising</div>
-            <p style={{ color: 'var(--ink3)', fontSize: 14 }}>Articles are being generated. Check back shortly or run the pipeline manually.</p>
+            <div style={{ fontFamily: 'var(--serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '.5rem' }}>Briefings Compiling</div>
+            <p style={{ color: 'var(--ink3)', fontSize: 14 }}>Our analysis network is compiling deep-research articles across Power Networks, Economic Warfare, India Lens, and Conflicts. Check back shortly.</p>
           </div>
         )}
       </main>

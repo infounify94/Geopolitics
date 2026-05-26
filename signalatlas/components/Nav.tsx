@@ -1,6 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
+import Ticker from './Ticker';
+import { supabase } from '@/lib/supabase';
 
 const PERSPECTIVES = [
   { label: 'India Lens',      sub: 'South Asia strategic analysis',    href: '/topics/india-lens'      },
@@ -15,6 +17,25 @@ export default function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [perspOpen, setPerspOpen] = useState(false);
   const perspRef = useRef<HTMLDivElement>(null);
+  const [tickerItems, setTickerItems] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadTicker() {
+      try {
+        const { data } = await supabase
+          .from('ticker_items')
+          .select('*')
+          .eq('active', true)
+          .order('priority');
+        if (data && data.length > 0) {
+          setTickerItems(data);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch live ticker items:', err);
+      }
+    }
+    loadTicker();
+  }, []);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -27,7 +48,9 @@ export default function Nav() {
   }, []);
 
   return (
-    <nav className="nav">
+    <>
+      <Ticker items={tickerItems} />
+      <nav className="nav">
       <div className="nav-inner">
         {/* Logo */}
         <Link href="/" className="logo">
@@ -139,5 +162,6 @@ export default function Nav() {
         </div>
       )}
     </nav>
+    </>
   );
 }

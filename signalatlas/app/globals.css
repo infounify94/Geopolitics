@@ -970,6 +970,12 @@ footer {
 .recent-item { padding: 12px 0; }
 .recent-title { font-size: 14px; font-weight: 600; color: var(--navy); margin: 4px 0; line-height: 1.4; }
 
+/* Sidebar briefings list */
+.sidebar-briefing { display: block; text-decoration: none; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.04); transition: all 0.15s ease; }
+.sidebar-briefing:last-child { border-bottom: none; }
+.sidebar-briefing-title { font-size: 13px; font-weight: 600; color: var(--navy); margin: 4px 0; line-height: 1.4; transition: color 0.15s ease; }
+.sidebar-briefing:hover .sidebar-briefing-title { color: var(--amber); }
+
 /* Main layout */
 .main { max-width: 1200px; margin: 0 auto; padding: 32px 40px; }
 .grid-main { display: grid; grid-template-columns: 1fr 340px; gap: 32px; margin-bottom: 40px; }

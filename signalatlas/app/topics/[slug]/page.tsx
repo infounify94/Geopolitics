@@ -328,7 +328,7 @@ export default async function TopicDetailPage({ params }: Props) {
                 <div style={{ fontSize: 32, marginBottom: '1rem' }}>📡</div>
                 <div style={{ fontFamily: 'var(--serif)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '.25rem' }}>No direct reports published yet</div>
                 <p style={{ color: 'var(--ink3)', fontSize: 13, maxWidth: 360, margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
-                  Our intelligence pipeline generates briefings daily. Check back soon or browse other strategic analysis topics.
+                  Our editorial team publishes new briefings regularly. Check back soon or browse other strategic analysis topics.
                 </p>
                 <Link href="/topics" style={{ fontSize: 11, fontFamily: 'var(--mono)', background: 'var(--navy)', color: 'var(--white)', padding: '6px 16px', borderRadius: 'var(--radius)', textDecoration: 'none', letterSpacing: '.04em' }}>
                   All Topics

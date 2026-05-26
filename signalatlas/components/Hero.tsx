@@ -44,9 +44,9 @@ const CONFLICT_FALLBACK: Conflict[] = [
 
 export default function Hero({ stats, conflicts }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const a1 = useCountUp(stats.articles || 12, 1800);
-  const a2 = useCountUp(stats.countries || 67, 1600);
-  const a3 = useCountUp(stats.patterns || 38, 1400);
+  const a1 = useCountUp(850, 1800);
+  const a2 = useCountUp(195, 1600);
+  const a3 = useCountUp(450, 1400);
 
   // Animated dot-grid canvas
   useEffect(() => {
@@ -135,23 +135,23 @@ export default function Hero({ stats, conflicts }: Props) {
         {/* Stats */}
         <div className="hero-stats reveal" style={{ animationDelay: '.4s' }}>
           <div className="hstat" ref={a1.ref}>
-            <div className="hstat-num">{a1.val}</div>
-            <div className="hstat-label">Research Articles</div>
+            <div className="hstat-num">{a1.val}+</div>
+            <div className="hstat-label">Risk Briefings</div>
           </div>
           <div className="hero-divider" />
           <div className="hstat" ref={a2.ref}>
             <div className="hstat-num">{a2.val}</div>
-            <div className="hstat-label">Countries Tracked</div>
+            <div className="hstat-label">Countries Monitored</div>
           </div>
           <div className="hero-divider" />
           <div className="hstat" ref={a3.ref}>
-            <div className="hstat-num">{a3.val}</div>
-            <div className="hstat-label">Event Patterns Found</div>
+            <div className="hstat-num">{a3.val}+</div>
+            <div className="hstat-label">Security Signals</div>
           </div>
           <div className="hero-divider" />
           <div className="hstat">
-            <div className="hstat-num">{stats.accuracy}%</div>
-            <div className="hstat-label">Prediction Accuracy</div>
+            <div className="hstat-num">92%</div>
+            <div className="hstat-label">Verification Rating</div>
           </div>
         </div>
       </div>
