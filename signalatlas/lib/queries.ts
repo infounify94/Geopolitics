@@ -120,14 +120,22 @@ export async function getTickerItems(): Promise<TickerItem[]> {
 // ─── Subscribe ────────────────────────────────────────────────
 
 export async function subscribeEmail(email: string): Promise<{ success: boolean; error?: string }> {
-  const { error } = await supabase
-    .from('subscribers')
-    .insert({ email });
-  if (error) {
-    if (error.code === '23505') return { success: false, error: 'Already subscribed!' };
-    return { success: false, error: 'Something went wrong.' };
+  try {
+    const { error } = await supabase
+      .from('subscribers')
+      .insert({ email });
+    if (error) {
+      if (error.code === '23505') return { success: false, error: 'Already subscribed!' };
+      return { success: false, error: error.message || 'Something went wrong.' };
+    }
+    return { success: true };
+  } catch (err: any) {
+    console.error('subscribeEmail error:', err);
+    return {
+      success: false,
+      error: 'Network connection failed. Please ensure Supabase is configured and online.'
+    };
   }
-  return { success: true };
 }
 
 // ─── Article count ────────────────────────────────────────────
