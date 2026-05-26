@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { supabase } from '@/lib/supabase';
+import { COUNTRIES } from './countries/page';
 
 export const runtime = 'edge';
 export const revalidate = 3600;
@@ -23,22 +24,12 @@ const BASE_ROUTES: MetadataRoute.Sitemap = [
   { url: '/topics/media-bias', changeFrequency: 'weekly', priority: 0.75 },
   { url: '/topics/asia', changeFrequency: 'daily', priority: 0.85 },
   { url: '/topics/energy-trade', changeFrequency: 'daily', priority: 0.85 },
-  // Country detail pages
-  { url: '/countries/us', changeFrequency: 'daily', priority: 0.85 },
-  { url: '/countries/cn', changeFrequency: 'daily', priority: 0.85 },
-  { url: '/countries/ru', changeFrequency: 'daily', priority: 0.85 },
-  { url: '/countries/in', changeFrequency: 'daily', priority: 0.85 },
-  { url: '/countries/gb', changeFrequency: 'weekly', priority: 0.75 },
-  { url: '/countries/il', changeFrequency: 'daily', priority: 0.8 },
-  { url: '/countries/ir', changeFrequency: 'daily', priority: 0.8 },
-  { url: '/countries/pk', changeFrequency: 'daily', priority: 0.8 },
-  { url: '/countries/ua', changeFrequency: 'daily', priority: 0.85 },
-  { url: '/countries/kp', changeFrequency: 'weekly', priority: 0.75 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://signalatlas.com';
 
+  // Fetch published articles
   const { data: articles } = await supabase
     .from('articles')
     .select('slug, published_at')
@@ -52,9 +43,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  // Generate dynamic country profile entries
+  const countryEntries: MetadataRoute.Sitemap = COUNTRIES.map((c) => ({
+    url: `${baseUrl}/countries/${c.code.toLowerCase()}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily',
+    priority: 0.8,
+  }));
+
   return [
     ...BASE_ROUTES.map(r => ({ ...r, url: `${baseUrl}${r.url}`, lastModified: new Date() })),
     ...articleEntries,
+    ...countryEntries,
   ];
 }
+
 

@@ -901,13 +901,67 @@ footer {
 .badge-blue    { background: var(--purple2);      color: var(--purple); }
 .badge-neutral { background: var(--off);          color: var(--ink3);   }
 
-/* Article body */
-.article-body { font-size: 16px; line-height: 1.8; color: var(--ink2); }
-.article-body h2 { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--ink); margin: 32px 0 16px; }
-.article-body h3 { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin: 24px 0 12px; }
-.article-body p  { margin-bottom: 18px; }
-.article-body strong { color: var(--ink); font-weight: 700; }
-.article-body blockquote { border-left: 3px solid var(--amber); padding: 12px 20px; margin: 24px 0; background: var(--amber-light); font-weight: 500; color: var(--amber); }
+/* Article body — Premium Editorial Serif Typography (similar to FT, Bloomberg, NYT) */
+.article-body {
+  font-family: Georgia, Charter, 'Times New Roman', serif;
+  font-size: 17.5px;
+  line-height: 1.85;
+  color: #1F2937; /* High-contrast charcoal ink */
+}
+.article-body h2 {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 38px 0 18px;
+  letter-spacing: -0.01em;
+}
+.article-body h3 {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--navy);
+  margin: 28px 0 14px;
+}
+.article-body p {
+  margin-bottom: 20px;
+  font-family: Georgia, Charter, serif;
+}
+.article-body strong {
+  color: var(--navy);
+  font-weight: 700;
+}
+.article-body blockquote {
+  border-left: 3px solid var(--amber);
+  padding: 14px 24px;
+  margin: 28px 0;
+  background: var(--amber-light);
+  font-family: var(--serif);
+  font-size: 18px;
+  font-style: italic;
+  color: #8A4F02;
+  border-radius: 2px;
+}
+.article-body ul, .article-body ol {
+  margin: 0 0 24px 24px;
+  padding: 0;
+}
+.article-body li {
+  margin-bottom: 8px;
+  line-height: 1.75;
+}
+.article-body a {
+  color: var(--amber);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+.article-body a:hover {
+  color: var(--navy);
+  text-decoration-color: var(--navy);
+}
+
 
 /* Article card meta */
 .art-hero { padding: 24px; }
