@@ -7,21 +7,23 @@ on:
       - 'signalatlas/**'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
-    # Also allows manual trigger from Actions tab
 
-# NOTE: The pipeline.yml uses [skip ci] on its commits so it does NOT trigger this workflow.
-# New articles appear on the site via ISR (revalidate=3600) without any redeploy.
+# NOTE: pipeline.yml commits use [skip ci] so they do NOT trigger this workflow.
+# New articles appear on the site via ISR (revalidate) without any redeploy.
 
 jobs:
   deploy:
     name: Build & Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -29,19 +31,17 @@ jobs:
           cache-dependency-path: signalatlas/package-lock.json
 
       - name: Install dependencies
-        run: |
-          cd signalatlas
-          npm ci
+        working-directory: signalatlas
+        run: npm ci
 
-      - name: Build with next-on-pages (Cloudflare adapter)
+      - name: Build Next.js for Cloudflare Pages
+        working-directory: signalatlas
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://signalatlas.pages.dev' }}
-        run: |
-          cd signalatlas
-          npm run pages:build
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+        run: npm run pages:build
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
@@ -50,4 +50,3 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy .vercel/output/static --project-name=signalatlas --branch=main
           workingDirectory: signalatlas
-
