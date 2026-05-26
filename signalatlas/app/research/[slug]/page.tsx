@@ -64,22 +64,41 @@ export default async function ArticlePage({ params }: Props) {
     ? (marked.parse(article.content) as string)
     : '';
 
-  // JSON-LD Article Schema
+  // JSON-LD Article Schema (NewsArticle for rich results)
   const articleSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'NewsArticle',
     headline: article.title,
     description: article.meta_description,
     datePublished: article.published_at,
     dateModified: article.updated_at,
-    author: { '@type': 'Organization', name: 'SignalAtlas Research' },
+    author: { '@type': 'Organization', name: 'SignalAtlas Research', url: siteUrl },
     publisher: {
       '@type': 'Organization',
       name: 'SignalAtlas',
       url: siteUrl,
+      logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.png` },
     },
     keywords: [...(article.countries ?? []), ...(article.topics ?? [])].join(', '),
+    articleSection: article.category,
+    about: article.countries?.map(c => ({ '@type': 'Place', name: c })),
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['h1', '.quick-summary', '.article-body > p:first-child'],
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${siteUrl}/research/${article.slug}` },
   };
+
+  // FAQ Schema for AEO
+  const faqSchema = article.faq?.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: article.faq.map(f => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: { '@type': 'Answer', text: f.answer },
+    })),
+  } : null;
 
   // Breadcrumb Schema
   const breadcrumbSchema = {
@@ -97,6 +116,7 @@ export default async function ArticlePage({ params }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
 
       <Nav />
 
@@ -117,6 +137,60 @@ export default async function ArticlePage({ params }: Props) {
             {article.category}
           </span>
         </div>
+
+        {/* ── Smart Context Routing ── */}
+        {/* Automatically links article to relevant Country Hub profiles and Conflict Map */}
+        {(() => {
+          const COUNTRY_CODES: Record<string, string> = {
+            'United States': 'us', 'USA': 'us', 'America': 'us',
+            'China': 'cn', 'Russia': 'ru', 'India': 'in',
+            'United Kingdom': 'gb', 'UK': 'gb', 'Israel': 'il',
+            'Iran': 'ir', 'Pakistan': 'pk', 'Ukraine': 'ua',
+            'North Korea': 'kp', 'Germany': 'de', 'France': 'fr',
+            'Japan': 'jp', 'Saudi Arabia': 'sa', 'Turkey': 'tr',
+          };
+          const CONFLICT_KEYWORDS: Record<string, string> = {
+            'Ukraine': 'Russia–Ukraine War', 'Russia': 'Russia–Ukraine War',
+            'Gaza': 'Gaza–Israel War', 'Hamas': 'Gaza–Israel War', 'Israel': 'Gaza–Israel War',
+            'Iran': 'US–Iran Tensions', 'Houthi': 'Yemen Civil War', 'Yemen': 'Yemen Civil War',
+            'Taiwan': 'Taiwan Strait', 'South China Sea': 'South China Sea',
+            'Sudan': 'Sudan Civil War', 'Myanmar': 'Myanmar Civil War',
+            'North Korea': 'North Korea Standoff', 'Hormuz': 'Strait of Hormuz',
+          };
+
+          const articleText = `${article.title} ${(article.countries || []).join(' ')} ${(article.topics || []).join(' ')}`;
+
+          const linkedCountries = Object.entries(COUNTRY_CODES)
+            .filter(([name]) => articleText.includes(name))
+            .reduce<Record<string, string>>((acc, [, code]) => { acc[code] = code; return acc; }, {});
+
+          const linkedConflicts = [...new Set(
+            Object.entries(CONFLICT_KEYWORDS)
+              .filter(([kw]) => articleText.includes(kw))
+              .map(([, conflict]) => conflict)
+          )];
+
+          const hasLinks = Object.keys(linkedCountries).length > 0 || linkedConflicts.length > 0;
+          if (!hasLinks) return null;
+
+          return (
+            <div style={{ background: 'var(--off)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '10px 14px', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--ink3)', letterSpacing: '.08em', textTransform: 'uppercase', flexShrink: 0 }}>
+                Track live:
+              </span>
+              {linkedConflicts.slice(0, 2).map(c => (
+                <a key={c} href="/conflicts" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'var(--mono)', fontSize: 10, color: '#E24B4A', background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 2, padding: '3px 8px', textDecoration: 'none', fontWeight: 600 }}>
+                  🔴 {c} — Conflict Map
+                </a>
+              ))}
+              {Object.keys(linkedCountries).slice(0, 3).map(code => (
+                <a key={code} href={`/countries/${code}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--navy)', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 2, padding: '3px 8px', textDecoration: 'none' }}>
+                  🌐 {code.toUpperCase()} Country Profile
+                </a>
+              ))}
+            </div>
+          );
+        })()}
 
         {/* H1 Title */}
         <h1 style={{ fontFamily: 'var(--serif)', fontSize: 30, lineHeight: 1.3, color: 'var(--ink)', marginBottom: 16 }}>
@@ -187,6 +261,43 @@ export default async function ArticlePage({ params }: Props) {
             className="article-body"
             dangerouslySetInnerHTML={{ __html: contentHtml }}
           />
+        )}
+
+        {/* India Lens Block — Strategic implications for South Asia */}
+        {(article.countries?.includes('India') ||
+          article.topics?.some(t => t.toLowerCase().includes('india')) ||
+          article.category === 'INDIA LENS' ||
+          article.summary_bullets?.some(b => b.toLowerCase().includes('india'))) && (
+          <div style={{ margin: '32px 0', background: 'linear-gradient(135deg, #FFF8F0, #FFFBF5)', border: '1px solid #FDDCB0', borderLeft: '3px solid #FF9933', borderRadius: 'var(--radius)', padding: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <div style={{ width: 24, height: 4, background: '#FF9933', borderRadius: 1 }} />
+                <div style={{ width: 24, height: 4, background: '#E8E8E8', borderRadius: 1 }} />
+                <div style={{ width: 24, height: 4, background: '#138808', borderRadius: 1 }} />
+              </div>
+              <div>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: '#FF9933', letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 500 }}>India Lens</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--navy)', fontFamily: 'var(--serif)' }}>Strategic Implications for India</div>
+              </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+              {[
+                { icon: '📈', label: 'Economy', text: 'Impact on Indian GDP, trade balances, and investment flows.' },
+                { icon: '🛡️', label: 'Security', text: 'Implications for India\'s defence posture and border security.' },
+                { icon: '🤝', label: 'Diplomacy', text: 'Effect on India\'s strategic partnerships and multilateral standing.' },
+                { icon: '🚢', label: 'Trade & Energy', text: 'Supply chain effects, oil imports, and corridor dependencies.' },
+              ].map(item => (
+                <div key={item.label} style={{ background: 'rgba(255,255,255,.8)', border: '1px solid #FDDCB0', borderRadius: 'var(--radius)', padding: '12px' }}>
+                  <div style={{ marginBottom: 4, fontSize: 18 }}>{item.icon}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--navy)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '.04em', fontFamily: 'var(--mono)' }}>{item.label}</div>
+                  <div style={{ fontSize: 12, color: 'var(--ink2)', lineHeight: 1.6 }}>{item.text}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #FDDCB0' }}>
+              <a href="/topics/india-lens" style={{ fontFamily: 'var(--mono)', fontSize: 11, color: '#FF9933', letterSpacing: '.06em', textDecoration: 'none' }}>Explore all India Lens analysis →</a>
+            </div>
+          </div>
         )}
 
         {/* Spacing */}

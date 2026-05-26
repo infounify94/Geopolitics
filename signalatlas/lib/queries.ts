@@ -147,39 +147,24 @@ export async function getDashboardStats() {
   // Try to get actual stats from DB, or fallback to sensible defaults based on data
   const { count: articleCount } = await supabase.from('articles').select('*', { count: 'exact', head: true }).eq('status', 'published');
   const { count: countryCount } = await supabase.from('countries').select('*', { count: 'exact', head: true });
-  const { count: patternCount } = await supabase.from('patterns').select('*', { count: 'exact', head: true });
+  // article_connections used as a proxy for detected patterns
+  const { count: patternCount } = await supabase.from('article_connections').select('*', { count: 'exact', head: true });
 
   return {
-    articles: articleCount || 1,
-    countries: countryCount || 1,
-    patterns: patternCount || 1,
+    articles: articleCount || 0,
+    countries: countryCount || 0,
+    patterns: patternCount || 0,
     accuracy: 89 // Placeholder as accuracy requires complex historical validation
   };
 }
 
 export async function getLatestChartData() {
-  const { data, error } = await supabase
-    .from('articles')
-    .select('chart_data')
-    .eq('status', 'published')
-    .not('chart_data', 'is', null)
-    .order('published_at', { ascending: false })
-    .limit(1);
-
-  if (error || !data || data.length === 0) {
-    return {
-      western: 80,
-      eastern: 70,
-      globalSouth: 40,
-    };
-  }
-  
-  // Extract chart data from the JSON column if it matches radar schema
-  const cd = data[0].chart_data as any;
+  // chart_data column does not exist in schema — return static radar defaults
+  // These represent approximate media bias scores by bloc (can be wired to real data later)
   return {
-    western: cd?.western || 80,
-    eastern: cd?.eastern || 70,
-    globalSouth: cd?.globalSouth || 40,
+    western: 80,
+    eastern: 70,
+    globalSouth: 40,
   };
 }
 

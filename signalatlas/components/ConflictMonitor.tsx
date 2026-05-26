@@ -1,90 +1,76 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import type { Conflict } from '@/lib/types';
 
 interface Props { conflicts: Conflict[]; }
 
-const ALERT_CLASS: Record<string, string> = {
-  CRITICAL: 'badge badge-red',
-  HIGH:     'badge badge-amber',
-  ACTIVE:   'badge badge-amber',
-  WATCH:    'badge badge-green',
-  RESOLVED: 'badge badge-neutral',
-};
-
-const ALERT_COLOR: Record<string, string> = {
-  CRITICAL: 'var(--red)',
-  HIGH:     'var(--amber)',
-  ACTIVE:   'var(--amber)',
-  WATCH:    'var(--green)',
-};
-
 const FALLBACK: Conflict[] = [
-  { id: '1', name: 'Gaza–Israel',    region: 'Middle East', start_date: '2023-10-07', days_active: 596,  intensity: 9.5, alert_level: 'CRITICAL', status: 'active', description: null },
-  { id: '2', name: 'Russia–Ukraine', region: 'Europe',      start_date: '2022-02-24', days_active: 1184, intensity: 9.2, alert_level: 'CRITICAL', status: 'active', description: null },
-  { id: '3', name: 'Sudan',          region: 'Africa',       start_date: '2023-04-15', days_active: 398,  intensity: 8.1, alert_level: 'HIGH',     status: 'active', description: null },
-  { id: '4', name: 'Myanmar Junta',  region: 'Asia',         start_date: '2021-02-01', days_active: 1180, intensity: 7.8, alert_level: 'HIGH',     status: 'active', description: null },
+  { id:'1', name:'Gaza–Israel War',   region:'Middle East', start_date:'2023-10-07', days_active:961,  intensity:9.5, alert_level:'CRITICAL', status:'active', description:null },
+  { id:'2', name:'Russia–Ukraine War',region:'Europe',      start_date:'2022-02-24', days_active:1551, intensity:9.2, alert_level:'CRITICAL', status:'active', description:null },
+  { id:'3', name:'Sudan Civil War',   region:'Africa',       start_date:'2023-04-15', days_active:1136, intensity:8.1, alert_level:'HIGH',     status:'active', description:null },
+  { id:'4', name:'Myanmar Junta',     region:'Asia',         start_date:'2021-02-01', days_active:1939, intensity:7.8, alert_level:'HIGH',     status:'active', description:null },
 ];
 
 export default function ConflictMonitor({ conflicts }: Props) {
-  const router = useRouter();
-  const list = conflicts.length > 0 ? conflicts : FALLBACK;
+  const list = (conflicts.length > 0 ? conflicts : FALLBACK).slice(0, 4);
 
   return (
-    <div className="card card-pad fade" style={{ animationDelay: '0.1s' }}>
-      <div className="sec-head">
-        <div className="sec-bar" style={{ background: 'var(--red)' }} />
-        <div className="sec-title">Conflict Monitor</div>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {list.map((c) => {
-          const days = c.days_active ?? Math.floor((Date.now() - new Date(c.start_date).getTime()) / 86400000);
-          const alertColor = ALERT_COLOR[c.alert_level ?? 'ACTIVE'] ?? 'var(--amber)';
-          return (
-            <div 
-              key={c.id} 
-              className="conflict-item lift" 
-              onClick={() => router.push('/conflicts')}
-              style={{ 
-                padding: '16px', 
-                background: 'var(--bg)', 
-                borderRadius: 8, 
-                borderLeft: `4px solid ${alertColor}`,
-                position: 'relative',
-                overflow: 'hidden'
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <div style={{ fontWeight: 800, color: 'var(--ink)' }}>{c.name}</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: alertColor, animation: c.alert_level === 'CRITICAL' ? 'pulse 1.5s infinite' : 'none' }} />
-                  <span className={ALERT_CLASS[c.alert_level ?? 'ACTIVE']}>
-                    {c.alert_level}
-                  </span>
-                </div>
-              </div>
-              
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                <div style={{ fontSize: 13, color: 'var(--ink3)' }}>
-                  {c.region} · Day {days.toLocaleString()}
-                </div>
-                <div style={{ fontSize: 16, fontFamily: 'var(--mono)', color: alertColor, fontWeight: 800 }}>
-                  {c.intensity}/10
-                </div>
-              </div>
+    <div className="conflict-bg">
+      <div className="conflict-section">
+        <div className="section-header reveal">
+          <div>
+            <div className="section-num">02 — Conflict Monitor</div>
+            <div className="section-title">Active Conflict Tracker</div>
+          </div>
+          <Link href="/conflicts" className="section-link">Full Monitor ↗</Link>
+        </div>
 
-              {/* Graphic intensity visual */}
-              <div style={{ marginTop: 12, height: 4, background: 'var(--bg3)', borderRadius: 2, overflow: 'hidden' }}>
-                <div style={{ 
-                  height: '100%', 
-                  width: `${(c.intensity ?? 0) * 10}%`, 
-                  background: alertColor,
-                  transition: 'width 1s ease-out'
-                }} />
+        <div className="conflict-grid reveal">
+          {list.map((c) => {
+            const days = c.days_active ?? Math.floor((Date.now() - new Date(c.start_date).getTime()) / 86400000);
+            const isCritical = c.alert_level === 'CRITICAL';
+            const barColor   = isCritical ? '#FF4444' : 'var(--amber2)';
+            const cardClass  = isCritical ? 'cmon-card cmon-critical' : 'cmon-card cmon-high';
+            const badgeClass = isCritical ? 'cmon-badge critical' : 'cmon-badge high';
+            const barWidth   = `${((c.intensity ?? 0) / 10) * 100}%`;
+
+            return (
+              <div key={c.id} className={cardClass}>
+                <div className="cmon-region">{c.region}</div>
+                <div className="cmon-name">{c.name}</div>
+                <div className="cmon-status">
+                  <span className={badgeClass}>{c.alert_level}</span>
+                  <span className="cmon-day">Day {days.toLocaleString()}</span>
+                </div>
+                <div className="cmon-bar-wrap">
+                  <div className="cmon-bar-track">
+                    <div className="cmon-bar-fill" style={{ width: barWidth, background: barColor }} />
+                  </div>
+                  <div className="cmon-score">
+                    <span>Severity</span>
+                    <span>{c.intensity} / 10</span>
+                  </div>
+                </div>
+
+                {/* Pulse SVG */}
+                <svg className="cmon-pulse" viewBox="0 0 28 28">
+                  {isCritical ? (
+                    <>
+                      <circle cx="14" cy="14" r="8" stroke={barColor} strokeWidth="1.5" fill="none"
+                        style={{ animation: 'pulseRing 2s ease-in-out infinite' }} />
+                      <circle cx="14" cy="14" r="4" fill={barColor} opacity=".9" />
+                    </>
+                  ) : (
+                    <>
+                      <circle cx="14" cy="14" r="8" stroke={barColor} strokeWidth="1.5" fill="none" opacity=".5" />
+                      <circle cx="14" cy="14" r="4" fill={barColor} opacity=".8" />
+                    </>
+                  )}
+                </svg>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

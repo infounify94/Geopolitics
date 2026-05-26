@@ -2,36 +2,66 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="footer">
-      <div className="footer-grid">
-        <div>
-          <div className="footer-logo">
-            Signal<span style={{ color: 'var(--red)', fontStyle: 'italic' }}>Atlas</span>
+    <footer>
+      <div className="footer-inner">
+        <div className="footer-grid">
+          {/* Brand */}
+          <div>
+            <div className="footer-brand">SignalAtlas</div>
+            <p className="footer-tagline">
+              Global events explained through evidence, timelines, data, and India context.
+              Independent research — not news, not opinion.
+            </p>
+            <p style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'rgba(255,255,255,.2)', marginTop: '.75rem', letterSpacing: '.08em' }}>
+              CONFIDENCE-SCORED · SOURCE-ATTRIBUTED · INDIA-FOCUSED
+            </p>
           </div>
-          <div className="footer-desc">
-            Global events explained through evidence, timelines, data, and India context.
-            Independent research — not news, not opinion. Every claim attributed.
+
+          {/* Research */}
+          <div>
+            <div className="footer-col-title">Research</div>
+            <div className="footer-links">
+              <Link href="/topics/power-networks">Power Networks</Link>
+              <Link href="/topics/trade-wars">Trade Wars</Link>
+              <Link href="/topics/sanctions">Sanctions</Link>
+              <Link href="/topics/media-bias">Media Bias</Link>
+              <Link href="/topics/brics">BRICS</Link>
+            </div>
           </div>
-          <div style={{ marginTop: 16, fontSize: 12, color: 'var(--ink4)' }}>
-            Confidence-scored · Source-attributed · India-focused
+
+          {/* Regions */}
+          <div>
+            <div className="footer-col-title">Regions</div>
+            <div className="footer-links">
+              <Link href="/topics/middle-east">Middle East</Link>
+              <Link href="/topics/south-asia">South Asia</Link>
+              <Link href="/topics/africa">Africa</Link>
+              <Link href="/topics/americas">Americas</Link>
+              <Link href="/topics/europe">Europe</Link>
+            </div>
+          </div>
+
+          {/* Platform */}
+          <div>
+            <div className="footer-col-title">Platform</div>
+            <div className="footer-links">
+              <Link href="/about">Methodology</Link>
+              <Link href="/about">Data Sources</Link>
+              <Link href="/about">Confidence System</Link>
+              <Link href="/about">About</Link>
+              <Link href="#subscribe">Subscribe</Link>
+            </div>
           </div>
         </div>
-        {[
-          { head: 'Research',  links: [['Power Networks', '/topics/power-networks'], ['Trade Wars', '/topics/trade-wars'], ['Sanctions', '/topics/sanctions'], ['Media Bias', '/topics/media-bias']] },
-          { head: 'Regions',   links: [['Middle East', '/topics/middle-east'], ['South Asia', '/topics/south-asia'], ['Africa', '/topics/africa'], ['Americas', '/topics/americas']] },
-          { head: 'Platform',  links: [['Methodology', '/methodology'], ['Data Sources', '/sources'], ['Confidence System', '/confidence'], ['Subscribe', '#subscribe']] },
-        ].map(col => (
-          <div key={col.head}>
-            <div className="footer-head">{col.head}</div>
-            {col.links.map(([label, href]) => (
-              <Link key={label} href={href} className="footer-link">{label}</Link>
-            ))}
+
+        <div className="footer-bottom">
+          <div>© {new Date().getFullYear()} SignalAtlas · All research based on publicly available sources</div>
+          <div className="footer-bottom-links">
+            <Link href="/about">Methodology</Link>
+            <Link href="/privacy">Privacy</Link>
+            <Link href="/about">Sources</Link>
           </div>
-        ))}
-      </div>
-      <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} SignalAtlas · All research based on publicly available sources</span>
-        <span>Methodology · Privacy · Sources</span>
+        </div>
       </div>
     </footer>
   );
