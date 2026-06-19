@@ -10,29 +10,24 @@ interface Props {
 
 function useCountUp(target: number, duration = 1800) {
   const [val, setVal] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const started = useRef(false);
 
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !started.current) {
-        started.current = true;
-        let startTime: number | null = null;
-        const step = (ts: number) => {
-          if (!startTime) startTime = ts;
-          const progress = Math.min((ts - startTime) / duration, 1);
-          const ease = 1 - Math.pow(1 - progress, 3);
-          setVal(Math.floor(ease * target));
-          if (progress < 1) requestAnimationFrame(step);
-        };
-        requestAnimationFrame(step);
+    let startTime: number | null = null;
+    let animId: number;
+    const step = (ts: number) => {
+      if (!startTime) startTime = ts;
+      const progress = Math.min((ts - startTime) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      setVal(Math.floor(ease * target));
+      if (progress < 1) {
+        animId = requestAnimationFrame(step);
       }
-    }, { threshold: 0.3 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
+    };
+    animId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animId);
   }, [target, duration]);
 
-  return { val, ref };
+  return { val };
 }
 
 const CONFLICT_FALLBACK: Conflict[] = [
@@ -44,9 +39,9 @@ const CONFLICT_FALLBACK: Conflict[] = [
 
 export default function Hero({ stats, conflicts }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const a1 = useCountUp(850, 1800);
-  const a2 = useCountUp(195, 1600);
-  const a3 = useCountUp(450, 1400);
+  const a1 = useCountUp(stats.articles > 0 ? stats.articles : 850, 1800);
+  const a2 = useCountUp(stats.countries > 0 ? stats.countries : 195, 1600);
+  const a3 = useCountUp(stats.patterns > 0 ? stats.patterns : 450, 1400);
 
   // Animated dot-grid canvas
   useEffect(() => {
@@ -134,17 +129,17 @@ export default function Hero({ stats, conflicts }: Props) {
 
         {/* Stats */}
         <div className="hero-stats reveal" style={{ animationDelay: '.4s' }}>
-          <div className="hstat" ref={a1.ref}>
+          <div className="hstat">
             <div className="hstat-num">{a1.val}+</div>
             <div className="hstat-label">Risk Briefings</div>
           </div>
           <div className="hero-divider" />
-          <div className="hstat" ref={a2.ref}>
+          <div className="hstat">
             <div className="hstat-num">{a2.val}</div>
             <div className="hstat-label">Countries Monitored</div>
           </div>
           <div className="hero-divider" />
-          <div className="hstat" ref={a3.ref}>
+          <div className="hstat">
             <div className="hstat-num">{a3.val}+</div>
             <div className="hstat-label">Security Signals</div>
           </div>

@@ -29,9 +29,7 @@ export default function TeamPage() {
         <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '2rem', display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
           {/* Avatar column */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', width: '120px' }}>
-            <div style={{ width: 100, height: 100, borderRadius: '50%', background: 'var(--navy)', color: 'var(--amber)', fontSize: 40, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              S
-            </div>
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=256&h=256&q=80" alt="Sathish - Lead Analyst" style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--navy)' }} />
           </div>
           
           {/* Bio column */}

@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getArticleBySlug(slug);
   if (!article) return { title: 'Not Found | SignalAtlas' };
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://signalatlas.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://worldcraftmedia.com';
 
   return {
     title: article.title,
@@ -62,7 +62,7 @@ export default async function ArticlePage({ params }: Props) {
   const recentBriefings = (recent || []).filter((a: Article) => a.id !== article.id).slice(0, 5);
 
   const cat = CATEGORY_COLORS[article.category] ?? CATEGORY_COLORS['GENERAL'];
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://signalatlas.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://worldcraftmedia.com';
 
   // Convert markdown content to HTML
   const contentHtml = article.content
