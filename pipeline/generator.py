@@ -63,6 +63,7 @@ CRITICAL WRITING INSTRUCTIONS:
   BAD: "The Economic Impact" → GOOD: "How a $40B Trade Route Died Quietly"
   BAD: "What Happened Next" → GOOD: "The 48-Hour Window That Changed the Calculus"
 - Bold the single most important finding per section.
+- You must insert at least 2 internal markdown links to the provided EVERGREEN ARTICLES within your body text, using format: [Title](/research/slug).
 - CRITICAL: Every bullet point and list item MUST include a 1-2 sentence explanation after the label.
   BAD: "• India" → GOOD: "• India — As a major importer dependent on this corridor, New Delhi faces a 12% cost increase in energy imports if the route is disrupted."
   BAD: "• Sanctions tightened" → GOOD: "• Sanctions tightened — The US Treasury designated 14 additional entities in February 2024, cutting off access to dollar clearing for all affiliated firms."
@@ -139,6 +140,12 @@ Remember to output ONLY valid JSON.
         except json.JSONDecodeError as e:
             print(f"  ⚠ JSON parse error: {e} — using fallback")
             metadata = _fallback_metadata(topic, raw)
+
+        # STRICT QUALITY GATE: 3+ SOURCES REQUIRED
+        sources = metadata.get("sources", [])
+        if len(sources) < 3:
+            print(f"  FAILED: Quality Gate Rejected. Only {len(sources)} sources cited, minimum 3 required.")
+            return None
 
         article = {
             "slug":              metadata.get("slug") or slugify(metadata.get("title", topic)),

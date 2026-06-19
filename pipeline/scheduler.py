@@ -14,7 +14,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(__file__))
 
 from generator import generate_article
-from publisher import publish_article, HEADERS as PUB_HEADERS, SUPABASE_URL
+from publisher import publish_article, find_recent_duplicate, fetch_evergreen_articles, HEADERS as PUB_HEADERS, SUPABASE_URL
 from scraper import fetch_all_topics
 from scorer import score_topics
 import requests
@@ -149,6 +149,10 @@ def run_pipeline() -> None:
     existing_articles = fetch_existing_articles()
     print(f"  → {len(existing_articles)} published articles in graph")
 
+    print("Step 3.5: Fetching high-value evergreen articles for internal linking...")
+    evergreen_articles = fetch_evergreen_articles(limit=3)
+    evergreen_context = "\n".join([f"- [{a['title']}](/research/{a['slug']})" for a in evergreen_articles])
+
     targets = scored_items[:ARTICLES_PER_RUN]
     print(f"\nStep 4: Generating {len(targets)} high-value article(s)...\n")
 
@@ -166,7 +170,16 @@ def run_pipeline() -> None:
 
         print(f"[{i+1}/{len(targets)}] (Score {score}/100) {topic[:60]}...")
 
-        article = generate_article(topic, context=context)
+        # Strict duplicate check before generation
+        if find_recent_duplicate(topic):
+            print("  - Skipping: Duplicate event cluster detected in recent articles.\n")
+            continue
+
+        full_context = context
+        if evergreen_context:
+            full_context += f"\n\nEVERGREEN ARTICLES TO LINK TO:\n{evergreen_context}"
+
+        article = generate_article(topic, context=full_context)
         if not article:
             print("  - Generation failed, skipping\n")
             continue

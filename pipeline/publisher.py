@@ -32,6 +32,41 @@ def slug_exists(slug: str) -> bool:
     return len(r.json()) > 0
 
 
+def find_recent_duplicate(title: str) -> bool:
+    """Check if we recently published an article with a highly similar title."""
+    r = requests.get(
+        f"{SUPABASE_URL}/rest/v1/articles",
+        headers=HEADERS,
+        params={"select": "title", "order": "published_at.desc", "limit": "50"},
+    )
+    if r.status_code != 200:
+        return False
+    
+    recent_titles = [a.get("title", "").lower() for a in r.json()]
+    new_tokens = set([w for w in title.lower().replace('-', ' ').split() if len(w) > 3])
+    
+    for old_title in recent_titles:
+        old_tokens = set([w for w in old_title.replace('-', ' ').split() if len(w) > 3])
+        if len(new_tokens) == 0:
+            continue
+        overlap = len(new_tokens.intersection(old_tokens)) / len(new_tokens)
+        if overlap >= 0.6:  # 60% overlap in significant words
+            print(f"  ⚠ Duplicate detected. High overlap with: '{old_title}'")
+            return True
+    return False
+
+def fetch_evergreen_articles(limit=3) -> list:
+    """Fetch recent high evergreen score articles for internal linking."""
+    r = requests.get(
+        f"{SUPABASE_URL}/rest/v1/articles",
+        headers=HEADERS,
+        params={"select": "title,slug,evergreen_score", "order": "evergreen_score.desc,published_at.desc", "limit": str(limit), "status": "eq.published"},
+    )
+    if r.status_code == 200:
+        return r.json()
+    return []
+
+
 def publish_article(article: dict) -> str | None:
     """
     Insert article into Supabase.
