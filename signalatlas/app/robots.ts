@@ -1,28 +1,25 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://signalatlas.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://signalatlas.com';
+  const isProduction = siteUrl.includes('signalatlas.com') && !siteUrl.includes('pages.dev');
+
+  if (!isProduction) {
+    // Block ALL indexing on pages.dev / localhost — domain not live yet
+    return {
+      rules: [{ userAgent: '*', disallow: '/' }],
+      // No sitemap exposed on staging
+    };
+  }
+
   return {
     rules: [
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/api/', '/_next/'],
-      },
-      {
-        userAgent: 'GPTBot',
-        allow: '/',
-      },
-      {
-        userAgent: 'ClaudeBot',
-        allow: '/',
-      },
-      {
-        userAgent: 'Google-Extended',
-        allow: '/',
-      },
+      { userAgent: '*', allow: '/', disallow: ['/api/', '/_next/'] },
+      { userAgent: 'GPTBot', allow: '/' },
+      { userAgent: 'ClaudeBot', allow: '/' },
+      { userAgent: 'Google-Extended', allow: '/' },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
+    sitemap: `${siteUrl}/sitemap.xml`,
+    host: siteUrl,
   };
 }

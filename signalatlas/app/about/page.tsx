@@ -32,10 +32,15 @@ export default function AboutPage() {
     '@type': 'Organization',
     name: 'SignalAtlas',
     url: siteUrl,
-    description: 'Global geopolitical intelligence platform. Data-driven analysis of conflicts, sanctions, power networks, and strategic trends.',
+    description: 'Independent geopolitical intelligence platform. Evidence-based analysis of conflicts, sanctions, power networks, and strategic trends.',
     sameAs: [],
-    foundingDate: '2024',
+    foundingDate: '2025',
+    founder: { '@type': 'Person', name: 'Sathish' },
     knowsAbout: ['Geopolitics', 'Conflict Analysis', 'Sanctions', 'Strategic Intelligence', 'India Foreign Policy'],
+    contactPoint: [
+      { '@type': 'ContactPoint', email: 'research@signalatlas.com', contactType: 'Research Enquiries' },
+      { '@type': 'ContactPoint', email: 'media@signalatlas.com', contactType: 'Media' },
+    ],
   };
 
   return (
@@ -102,7 +107,7 @@ export default function AboutPage() {
               ['Stage 2', 'Primary Registries', 'Direct data ingestion from multilateral registries: UN, IMF, World Bank, WTO, and official regional ministries.'],
               ['Stage 3', 'Risk Modeling', 'Structured evaluation of diplomatic friction parameters, military capabilities, and macro-economic factors.'],
               ['Stage 4', 'Strategic Framework', 'Comprehensive intelligence drafting across our unique 17-angle regional and thematic risk matrix.'],
-              ['Verification', 'Editorial Board', 'Rigorous verification auditing, source validation, and regional impact overlay (including India Lens).'],
+              ['Stage 5', 'Human Review', 'All AI-assisted drafts are reviewed and fact-checked by a human analyst before publication. Inline citations verified against named sources.'],
               ['Registry', 'Archival Integrity', 'Continuous archival integration ensuring database audit trails and chronological timeline compliance.'],
             ].map(([step, title, desc]) => (
               <div key={step} style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)', borderRadius: 'var(--radius)', padding: '1rem' }}>
@@ -128,6 +133,7 @@ export default function AboutPage() {
                   <span style={{ fontSize: 12, color: 'var(--ink2)', lineHeight: 1.5 }}>{d}</span>
                 </div>
               ))}
+              <a href="/confidence" style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--amber)', letterSpacing: '.06em', textDecoration: 'none', display: 'block', marginTop: '.75rem' }}>Full confidence system →</a>
             </div>
             <div>
               <div style={{ fontFamily: 'var(--serif)', fontWeight: 700, color: 'var(--navy)', marginBottom: '.5rem' }}>What We Are Not</div>
@@ -138,6 +144,7 @@ export default function AboutPage() {
                 <li>Not opinion journalism — claims require evidence</li>
                 <li>Not predictive — scenarios are probabilistic, not forecasts</li>
               </ul>
+              <a href="/methodology" style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--amber)', letterSpacing: '.06em', textDecoration: 'none', display: 'block', marginTop: '.75rem' }}>Read full methodology →</a>
             </div>
           </div>
         </div>

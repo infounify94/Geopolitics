@@ -7,6 +7,8 @@ import FAQSection from '@/components/FAQSection';
 import ConfidenceCard from '@/components/ConfidenceCard';
 import RelationshipGraph from '@/components/RelationshipGraph';
 import ArticleCard from '@/components/ArticleCard';
+import ScrollProgress from '@/components/ScrollProgress';
+import RiskMatrix from '@/components/RiskMatrix';
 import { getArticleBySlug, getAllPublishedSlugs, getRelatedArticles, getRecentArticles } from '@/lib/queries';
 import { CATEGORY_COLORS } from '@/lib/types';
 import type { Article } from '@/lib/types';
@@ -75,7 +77,15 @@ export default async function ArticlePage({ params }: Props) {
     description: article.meta_description,
     datePublished: article.published_at,
     dateModified: article.updated_at,
-    author: { '@type': 'Organization', name: 'SignalAtlas Research', url: siteUrl },
+    // Use real Person schema when author is known; fall back to Organization
+    author: article.author_name
+      ? {
+          '@type': 'Person',
+          name: article.author_name,
+          url: article.author_slug ? `${siteUrl}/team` : undefined,
+          worksFor: { '@type': 'Organization', name: 'SignalAtlas', url: siteUrl },
+        }
+      : { '@type': 'Organization', name: 'SignalAtlas Research', url: siteUrl },
     publisher: {
       '@type': 'Organization',
       name: 'SignalAtlas',
@@ -121,25 +131,31 @@ export default async function ArticlePage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
 
+      <ScrollProgress />
       <Nav />
 
-      {/* Hero Header Area (Full-Width, High-Contrast) */}
-      <div style={{ borderBottom: '1px solid var(--border)', background: 'var(--white)', padding: '2.5rem 0 2rem' }}>
+      {/* Hero Header Area (Dynamic by Article Type) */}
+      <div style={{ 
+        borderBottom: '1px solid var(--border)', 
+        background: article.article_type === 'live_update' ? 'var(--navy)' : 'var(--white)', 
+        padding: '2.5rem 0 2rem',
+        color: article.article_type === 'live_update' ? 'var(--white)' : 'var(--ink)'
+      }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px' }}>
           
           {/* Breadcrumb */}
-          <nav style={{ fontSize: 11, color: 'var(--ink4)', marginBottom: 20, fontFamily: 'var(--mono)' }}>
-            <a href="/" style={{ color: 'var(--ink4)', textDecoration: 'none' }}>Home</a>
+          <nav style={{ fontSize: 11, color: article.article_type === 'live_update' ? 'rgba(255,255,255,0.6)' : 'var(--ink4)', marginBottom: 20, fontFamily: 'var(--mono)' }}>
+            <a href="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</a>
             {' / '}
-            <a href="/research" style={{ color: 'var(--ink4)', textDecoration: 'none' }}>Research</a>
+            <a href="/research" style={{ color: 'inherit', textDecoration: 'none' }}>Research</a>
             {' / '}
-            <span style={{ color: 'var(--ink3)' }}>{article.category}</span>
+            <span style={{ color: article.article_type === 'live_update' ? 'var(--amber)' : 'var(--ink3)' }}>{article.category}</span>
           </nav>
 
           {/* Category badge */}
           <div style={{ marginBottom: 14 }}>
             <span className="cat" style={{ background: cat.bg, color: cat.color }}>
-              {article.category}
+              {article.article_type === 'live_update' ? '🔴 LIVE UPDATE' : article.category}
             </span>
           </div>
 
@@ -178,8 +194,8 @@ export default async function ArticlePage({ params }: Props) {
             if (!hasLinks) return null;
 
             return (
-              <div style={{ background: 'var(--off)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '10px 14px', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--ink3)', letterSpacing: '.08em', textTransform: 'uppercase', flexShrink: 0 }}>
+              <div style={{ background: article.article_type === 'live_update' ? 'rgba(255,255,255,0.05)' : 'var(--off)', border: `1px solid ${article.article_type === 'live_update' ? 'rgba(255,255,255,0.1)' : 'var(--border)'}`, borderRadius: 'var(--radius)', padding: '10px 14px', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: article.article_type === 'live_update' ? 'rgba(255,255,255,0.5)' : 'var(--ink3)', letterSpacing: '.08em', textTransform: 'uppercase', flexShrink: 0 }}>
                   Track live:
                 </span>
                 {linkedConflicts.slice(0, 2).map(c => (
@@ -197,30 +213,47 @@ export default async function ArticlePage({ params }: Props) {
           })()}
 
           {/* H1 Title */}
-          <h1 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4.5vw, 2.6rem)', fontWeight: 800, lineHeight: 1.25, color: 'var(--ink)', marginBottom: 16, letterSpacing: '-0.02em' }}>
+          <h1 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4.5vw, 2.6rem)', fontWeight: 800, lineHeight: 1.25, color: article.article_type === 'live_update' ? 'var(--white)' : 'var(--ink)', marginBottom: 16, letterSpacing: '-0.02em' }}>
             {article.title}
           </h1>
 
-          {/* Article metadata */}
-          <div className="art-meta" style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', fontSize: 11, color: 'var(--ink3)', fontFamily: 'var(--mono)', letterSpacing: '.02em' }}>
-            <span>{formatDate(article.published_at)}</span>
+          {/* Article metadata row */}
+          <div className="art-meta" style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', fontSize: 11, color: article.article_type === 'live_update' ? 'rgba(255,255,255,0.6)' : 'var(--ink3)', fontFamily: 'var(--mono)', letterSpacing: '.02em' }}>
+            {article.article_type === 'live_update' ? (
+               <span style={{ color: 'var(--amber)', fontWeight: 700 }}>LAST UPDATED: {formatDate(article.updated_at || article.published_at)}</span>
+            ) : (
+               <span>{formatDate(article.published_at)}</span>
+            )}
+            
             {article.read_time_mins && (
               <>
-                <span className="dot">·</span>
+                <span className="dot" style={{ color: 'inherit' }}>·</span>
                 <span>{article.read_time_mins} min read</span>
               </>
             )}
             {article.word_count && (
               <>
-                <span className="dot">·</span>
+                <span className="dot" style={{ color: 'inherit' }}>·</span>
                 <span>{article.word_count.toLocaleString()} words</span>
               </>
             )}
             {article.impact_score && (
               <>
-                <span className="dot">·</span>
+                <span className="dot" style={{ color: 'inherit' }}>·</span>
                 <span style={{ fontFamily: 'var(--serif)', color: article.impact_score >= 8.5 ? 'var(--red)' : 'var(--amber)', fontWeight: 700 }}>
                   {article.impact_score} impact
+                </span>
+              </>
+            )}
+            {/* Author byline */}
+            {article.author_name && (
+              <>
+                <span className="dot" style={{ color: 'inherit' }}>·</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <span style={{ width: 18, height: 18, borderRadius: '50%', background: article.article_type === 'live_update' ? 'rgba(255,255,255,0.1)' : 'var(--navy)', color: 'var(--amber)', fontSize: 9, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    {article.author_name.charAt(0).toUpperCase()}
+                  </span>
+                  <a href="/team" style={{ color: article.article_type === 'live_update' ? 'var(--white)' : 'var(--ink2)', textDecoration: 'none' }}>{article.author_name} · SignalAtlas</a>
                 </span>
               </>
             )}
@@ -252,27 +285,38 @@ export default async function ArticlePage({ params }: Props) {
               </div>
             )}
 
+            {/* Executive Summary Block */}
+            {article.summary_bullets && article.summary_bullets.length > 0 && (
+              <div style={{ background: 'linear-gradient(145deg, #ffffff, #f9fbfd)', border: '1px solid var(--border)', borderTop: '3px solid var(--navy)', borderRadius: 'var(--radius)', padding: '1.75rem', marginBottom: '2.5rem', boxShadow: 'var(--shadow)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '1.25rem' }}>
+                  <span style={{ fontSize: '18px' }}>📌</span>
+                  <span style={{ fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 700, color: 'var(--navy)', letterSpacing: '.1em', textTransform: 'uppercase' }}>Executive Summary</span>
+                </div>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {article.summary_bullets.map((bullet, i) => (
+                    <li key={i} style={{ display: 'flex', gap: '12px', fontSize: 15, color: 'var(--ink)', lineHeight: 1.6 }}>
+                      <span style={{ color: 'var(--amber)', fontSize: 18, flexShrink: 0, lineHeight: 1.4 }}>•</span>
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* Premium Serif Article Body */}
             {contentHtml && (
               <div
-                className="article-body"
-                style={{
-                  fontFamily: "Georgia, Charter, 'Times New Roman', serif",
-                  fontSize: '17px',
-                  lineHeight: '1.8',
-                  color: '#1F2937',
-                  letterSpacing: '-0.01em',
-                  marginBottom: '2.5rem'
-                }}
+                className={`article-body ${article.article_type === 'live_update' ? 'live-update-body' : 'analysis-body'}`}
                 dangerouslySetInnerHTML={{ __html: contentHtml }}
               />
             )}
 
-            {/* India Lens Block — Strategic implications for South Asia */}
-            {(article.countries?.includes('India') ||
-              article.topics?.some(t => t.toLowerCase().includes('india')) ||
-              article.category === 'INDIA LENS' ||
-              article.summary_bullets?.some(b => b.toLowerCase().includes('india'))) && (
+            {/* Geopolitical Risk Matrix Data Vis */}
+            <RiskMatrix impact={article.impact_score} pattern={article.pattern_score} evergreen={article.evergreen_score} />
+
+            {/* India Lens Block — only show when article genuinely covers India */}
+            {(article.category === 'INDIA LENS' ||
+              article.countries?.includes('India')) && (
               <div style={{ margin: '32px 0', background: 'linear-gradient(135deg, #FFF8F0, #FFFBF5)', border: '1px solid #FDDCB0', borderLeft: '3px solid #FF9933', borderRadius: 'var(--radius)', padding: '1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '1rem' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

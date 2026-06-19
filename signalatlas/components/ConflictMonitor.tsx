@@ -5,10 +5,10 @@ import type { Conflict } from '@/lib/types';
 interface Props { conflicts: Conflict[]; }
 
 const FALLBACK: Conflict[] = [
-  { id:'1', name:'Gaza–Israel War',   region:'Middle East', start_date:'2023-10-07', days_active:961,  intensity:9.5, alert_level:'CRITICAL', status:'active', description:null },
-  { id:'2', name:'Russia–Ukraine War',region:'Europe',      start_date:'2022-02-24', days_active:1551, intensity:9.2, alert_level:'CRITICAL', status:'active', description:null },
-  { id:'3', name:'Sudan Civil War',   region:'Africa',       start_date:'2023-04-15', days_active:1136, intensity:8.1, alert_level:'HIGH',     status:'active', description:null },
-  { id:'4', name:'Myanmar Junta',     region:'Asia',         start_date:'2021-02-01', days_active:1939, intensity:7.8, alert_level:'HIGH',     status:'active', description:null },
+  { id:'1', name:'Gaza–Israel War',   region:'Middle East', start_date:'2023-10-07', intensity:9.5, alert_level:'CRITICAL', status:'active', description:null },
+  { id:'2', name:'Russia–Ukraine War',region:'Europe',      start_date:'2022-02-24', intensity:9.2, alert_level:'CRITICAL', status:'active', description:null },
+  { id:'3', name:'Sudan Civil War',   region:'Africa',      start_date:'2023-04-15', intensity:8.1, alert_level:'HIGH',     status:'active', description:null },
+  { id:'4', name:'Myanmar Junta',     region:'Asia',        start_date:'2021-02-01', intensity:7.8, alert_level:'HIGH',     status:'active', description:null },
 ];
 
 export default function ConflictMonitor({ conflicts }: Props) {

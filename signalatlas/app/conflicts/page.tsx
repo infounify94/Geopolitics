@@ -1,7 +1,7 @@
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ConflictMap from '@/components/ConflictMap';
-import { CONFLICT_POINTS, TYPE_COLORS, TYPE_LABELS } from '@/lib/conflictData';
+import { CONFLICT_POINTS, TYPE_COLORS, TYPE_LABELS, getDaysActive } from '@/lib/conflictData';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -128,7 +128,7 @@ export default function ConflictsPage() {
 
                   {/* Stats row */}
                   <div style={{ display:'flex', gap:16, marginBottom:'.6rem' }}>
-                    {[['Region',c.region],['Day',c.daysActive.toLocaleString()],['Severity',`${c.intensity}/10`]].map(([k,v]) => (
+                    {[['Region',c.region],['Day', getDaysActive(c.startDate).toLocaleString()],['Severity',`${c.intensity}/10`]].map(([k,v]) => (
                       <div key={k}>
                         <div style={{ fontSize:9, fontFamily:'var(--mono)', color:'var(--ink3)', letterSpacing:'.06em', textTransform:'uppercase', marginBottom:2 }}>{k}</div>
                         <div style={{ fontSize:11, fontWeight: k === 'Severity' ? 700 : 600, color: k === 'Severity' ? color : 'var(--ink)', fontFamily:'var(--mono)' }}>{v}</div>

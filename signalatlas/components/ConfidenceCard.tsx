@@ -267,7 +267,14 @@ export default function ConfidenceCard({ article }: Props) {
                     fontSize: 9, fontWeight: 700, color: 'var(--blue)', flexShrink: 0,
                   }}>{i + 1}</div>
                   <div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>{s.name}</div>
+                    {s.url ? (
+                      <a href={s.url} target="_blank" rel="noopener noreferrer"
+                         style={{ fontSize: 12, fontWeight: 600, color: 'var(--blue)', textDecoration: 'none' }}>
+                        {s.name} ↗
+                      </a>
+                    ) : (
+                      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>{s.name}</div>
+                    )}
                     {s.type && <div style={{ fontSize: 10, color: 'var(--ink4)' }}>{s.type}</div>}
                     {(s as any).used_for && (
                       <div style={{ fontSize: 10, color: 'var(--ink4)' }}>Used for: {(s as any).used_for}</div>

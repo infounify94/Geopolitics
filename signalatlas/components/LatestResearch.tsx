@@ -13,19 +13,6 @@ function timeAgo(dateStr: string | null): string {
   return `${d}d ago`;
 }
 
-const BIAS_DATA = [
-  { outlet: 'Reuters',    label: 'Neutral',      pct: 82, color: '#3B6D11' },
-  { outlet: 'BBC',        label: 'Slight West',  pct: 71, color: '#1A5F9C' },
-  { outlet: 'Al Jazeera', label: 'Gulf bias',    pct: 65, color: 'var(--amber)' },
-  { outlet: 'NDTV',       label: 'India-first',  pct: 54, color: '#6B3AB7' },
-];
-
-const TIMELINE = [
-  { year: '2022', title: 'Ukraine War Begins',    pattern: 'Proxy War'       },
-  { year: '2023', title: 'Niger Coup',            pattern: 'Anti-West Wave'  },
-  { year: '2024', title: 'Venezuela Crisis',      pattern: 'Protest Pattern' },
-  { year: '2025', title: 'Haiti State Collapse',  pattern: 'State Failure'   },
-];
 
 export default function LatestResearch({ articles }: Props) {
   return (
@@ -75,35 +62,24 @@ export default function LatestResearch({ articles }: Props) {
 
           {/* Sidebar */}
           <div>
-            {/* Media bias tracker */}
+            {/* Editorial Standards */}
             <div className="sidebar-card">
-              <div className="sc-title">Media Coverage Bias Tracker</div>
-              {BIAS_DATA.map((b) => (
-                <div key={b.outlet} className="bias-bar-row">
-                  <div className="bias-outlet">
-                    <span>{b.outlet}</span>
-                    <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--ink3)' }}>{b.label}</span>
+              <div className="sc-title">Editorial Standards</div>
+              {[
+                { icon: '📎', label: '3+ Sources', desc: 'Every claim requires minimum 3 named, linkable sources' },
+                { icon: '🔬', label: 'Confidence Scoring', desc: 'High / Medium / Low — based on source quality and count' },
+                { icon: '🇮🇳', label: 'India Lens', desc: 'Every article analysed for India strategic implications' },
+                { icon: '📅', label: 'Timestamped Updates', desc: 'Breaking events updated in-place, not republished' },
+              ].map(item => (
+                <div key={item.label} style={{ display: 'flex', gap: 10, marginBottom: 12, alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
+                  <div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--navy)', fontFamily: 'var(--mono)', letterSpacing: '.04em' }}>{item.label}</div>
+                    <div style={{ fontSize: 11, color: 'var(--ink3)', lineHeight: 1.5, marginTop: 2 }}>{item.desc}</div>
                   </div>
-                  <div className="bias-track">
-                    <div className="bias-fill" style={{ width: `${b.pct}%`, background: b.color }} />
-                  </div>
-                  <div className="bias-label">Coverage: {b.pct}%</div>
                 </div>
               ))}
-            </div>
-
-            {/* Timeline */}
-            <div className="sidebar-card">
-              <div className="sc-title">Global Event Timeline</div>
-              <div className="timeline-wrap">
-                {TIMELINE.map((t) => (
-                  <div key={t.year} className="tl-event">
-                    <div className="tl-year">{t.year}</div>
-                    <div className="tl-title">{t.title}</div>
-                    <div className="tl-pattern">Pattern: {t.pattern}</div>
-                  </div>
-                ))}
-              </div>
+              <a href="/methodology" style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--amber)', letterSpacing: '.06em', textDecoration: 'none', display: 'block', marginTop: 4 }}>Read full methodology →</a>
             </div>
           </div>
         </div>

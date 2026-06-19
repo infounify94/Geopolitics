@@ -1024,3 +1024,54 @@ footer {
     padding: 10px 16px;
   }
 }
+
+/* ────────────────────────────────────────────
+   ARTICLE BODY STYLING (PREMIUM UX)
+──────────────────────────────────────────── */
+.article-body {
+  font-family: Georgia, Charter, 'Times New Roman', serif;
+  font-size: 17px;
+  line-height: 1.8;
+  color: #1F2937;
+  letter-spacing: -0.01em;
+  margin-bottom: 2.5rem;
+}
+
+.article-body p { margin-bottom: 1.5rem; }
+.article-body h2 { font-family: var(--serif); font-size: 1.6rem; color: var(--navy); margin: 2rem 0 1rem; }
+.article-body h3 { font-family: var(--sans); font-size: 1.2rem; color: var(--ink); margin: 1.5rem 0 0.75rem; }
+.article-body ul, .article-body ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+.article-body li { margin-bottom: 0.5rem; }
+.article-body blockquote { 
+  border-left: 3px solid var(--amber); 
+  padding: 1rem 1.5rem; 
+  margin: 2rem 0; 
+  background: var(--off);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--ink2);
+}
+
+/* Analysis Layout (Default) - Elegant Drop Cap */
+.analysis-body > p:first-of-type::first-letter {
+  font-family: var(--serif);
+  float: left;
+  font-size: 4.5rem;
+  line-height: 0.8;
+  padding-top: 0.15rem;
+  padding-right: 0.5rem;
+  padding-left: 0.1rem;
+  color: var(--navy);
+  font-weight: 700;
+}
+
+/* Live Update Layout - Urgent, newsroom feel */
+.live-update-body {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+}
+.live-update-body > p:first-of-type {
+  font-weight: 500;
+  font-size: 1.1rem;
+}

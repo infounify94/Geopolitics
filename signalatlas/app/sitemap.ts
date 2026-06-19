@@ -12,6 +12,10 @@ const BASE_ROUTES: MetadataRoute.Sitemap = [
   { url: '/countries', changeFrequency: 'daily', priority: 0.9 },
   { url: '/topics', changeFrequency: 'daily', priority: 0.9 },
   { url: '/about', changeFrequency: 'monthly', priority: 0.7 },
+  { url: '/team', changeFrequency: 'monthly', priority: 0.7 },
+  { url: '/methodology', changeFrequency: 'monthly', priority: 0.8 },
+  { url: '/sources', changeFrequency: 'monthly', priority: 0.75 },
+  { url: '/confidence', changeFrequency: 'monthly', priority: 0.75 },
   { url: '/contact', changeFrequency: 'monthly', priority: 0.5 },
   // Topic pages
   { url: '/topics/power-networks', changeFrequency: 'daily', priority: 0.85 },

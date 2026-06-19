@@ -1,28 +1,31 @@
 'use client';
+import { getDaysActive } from '@/lib/conflictData';
 import type { TickerItem } from '@/lib/types';
-import type { Conflict } from '@/lib/types';
 
 interface Props {
   items: TickerItem[];
-  conflicts?: Conflict[];
 }
 
-const FALLBACK_ITEMS = [
-  { text: 'Gaza–Israel — Day 961 · Impact 9.5', level: 'critical' },
-  { text: 'Russia–Ukraine — Day 1,551 · Active Frontlines', level: 'critical' },
-  { text: 'Sudan Civil War — Ceasefire talks collapsed', level: 'high' },
-  { text: 'US–Iran nuclear talks — Uranium enrichment gap remains', level: 'high' },
-  { text: 'Apple India pivot — Supply chain shift accelerates', level: 'medium' },
-  { text: 'Strait of Hormuz — Shipping disruptions escalating', level: 'high' },
-  { text: 'Marco Rubio India visit — Tariffs & tech on agenda', level: 'medium' },
+// Conflict start dates for dynamic day computation — single source of truth
+const CONFLICT_STARTS: { text: string; startDate: string; level: 'critical' | 'high' | 'medium' }[] = [
+  { text: 'Gaza–Israel War',        startDate: '2023-10-07', level: 'critical' },
+  { text: 'Russia–Ukraine War',     startDate: '2022-02-24', level: 'critical' },
+  { text: 'Sudan Civil War',        startDate: '2023-04-15', level: 'high' },
+  { text: 'US–Iran Tensions',       startDate: '2024-01-01', level: 'high' },
+  { text: 'Strait of Hormuz',       startDate: '2023-11-19', level: 'high' },
 ];
 
-export default function Ticker({ items, conflicts }: Props) {
-  const tickerItems = items.length > 0
-    ? items.map(i => ({ text: i.text, level: 'medium' }))
-    : FALLBACK_ITEMS;
+export default function Ticker({ items }: Props) {
+  // Dynamic fallback: compute day counts at render time — never stale
+  const fallbackItems = CONFLICT_STARTS.map(c => ({
+    text: `${c.text} — Day ${getDaysActive(c.startDate).toLocaleString()}`,
+    level: c.level,
+  }));
 
-  // Duplicate for seamless loop
+  const tickerItems = items.length > 0
+    ? items.map(i => ({ text: i.text, level: 'medium' as const }))
+    : fallbackItems;
+
   const doubled = [...tickerItems, ...tickerItems];
 
   return (

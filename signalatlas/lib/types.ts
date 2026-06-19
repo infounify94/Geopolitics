@@ -24,12 +24,17 @@ export interface Article {
   published_at: string | null;
   created_at: string;
   updated_at: string;
+  // Authorship & article type (Phase 3 additions)
+  author_name: string | null;
+  author_slug: string | null;
+  article_type: 'analysis' | 'live_update' | 'explainer' | null;
 }
 
 export interface Source {
   name: string;
   url?: string;
   type?: string;
+  used_for?: string;
 }
 
 export interface FAQ {

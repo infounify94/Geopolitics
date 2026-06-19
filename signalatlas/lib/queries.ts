@@ -8,7 +8,7 @@ export async function getFeaturedArticles(limit = 3): Promise<Article[]> {
     .from('articles')
     .select('*')
     .eq('status', 'published')
-    .order('impact_score', { ascending: false })
+    .order('published_at', { ascending: false })
     .limit(limit);
   if (error) { console.error('getFeaturedArticles:', error); return []; }
   return (data as Article[]) ?? [];

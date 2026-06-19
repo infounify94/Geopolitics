@@ -45,10 +45,11 @@ export default function Footer() {
           <div>
             <div className="footer-col-title">Platform</div>
             <div className="footer-links">
-              <Link href="/about">Methodology</Link>
-              <Link href="/about">Data Sources</Link>
-              <Link href="/about">Confidence System</Link>
+              <Link href="/methodology">Methodology</Link>
+              <Link href="/sources">Data Sources</Link>
+              <Link href="/confidence">Confidence System</Link>
               <Link href="/about">About</Link>
+              <Link href="/team">Our Team</Link>
               <Link href="#subscribe">Subscribe</Link>
             </div>
           </div>

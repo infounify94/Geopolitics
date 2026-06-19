@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
-import { CONFLICT_POINTS, TYPE_COLORS, TYPE_LABELS } from '@/lib/conflictData';
+import { CONFLICT_POINTS, TYPE_COLORS, TYPE_LABELS, getDaysActive } from '@/lib/conflictData';
 import type { ConflictPoint } from '@/lib/conflictData';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
@@ -105,7 +105,7 @@ export default function ConflictMap({ filter = 'all' }: { filter?: string }) {
           </div>
 
           <div style={{ display:'flex', gap:14, marginBottom:'.75rem' }}>
-            {[['Region',selected.region],['Days',selected.daysActive.toLocaleString()],['Severity',`${selected.intensity}/10`]].map(([k,v]) => (
+            {[['Region',selected.region],['Days',getDaysActive(selected.startDate).toLocaleString()],['Severity',`${selected.intensity}/10`]].map(([k,v]) => (
               <div key={k}>
                 <div style={{ fontFamily:'var(--mono)', fontSize:8, color:'rgba(255,255,255,.35)', textTransform:'uppercase', letterSpacing:'.08em' }}>{k}</div>
                 <div style={{ fontSize:11, marginTop:2, fontWeight: k === 'Severity' ? 700 : 400, fontFamily: k === 'Severity' ? 'var(--mono)' : 'var(--sans)', color: k === 'Severity' ? TYPE_CONFIG[selected.type].color : 'rgba(255,255,255,.75)' }}>{v}</div>
