@@ -7,8 +7,11 @@ import Script from 'next/script';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://signalatlas.com';
+const isStaging = siteUrl.includes('pages.dev') || process.env.CF_PAGES === '1';
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://signalatlas.com'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'SignalAtlas — Global Geopolitical Intelligence Platform',
     template: '%s | SignalAtlas',
@@ -31,11 +34,13 @@ export const metadata: Metadata = {
     title: 'SignalAtlas — Global Geopolitical Intelligence',
     description: 'Conflict tracking, country risk scores, and evidence-based strategic analysis.',
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large', 'max-video-preview': -1 },
-  },
+  robots: isStaging 
+    ? { index: false, follow: false }
+    : {
+        index: true,
+        follow: true,
+        googleBot: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large', 'max-video-preview': -1 },
+      },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
